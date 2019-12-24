@@ -1,0 +1,75 @@
+{
+    "trigger": {
+      "schedule": {
+        "interval": "60s"
+      }
+    },
+    "input": {
+      "search": {
+        "request": {
+          "search_type": "query_then_fetch",
+          "indices": [
+            "my-index-*"
+          ],
+          "types": [],
+          "body": {
+            "query": {
+              "bool": {
+                "must": [
+                  {
+                    "query_string": {
+                      "query": "\"my search string here\""
+                    }
+                  },
+                  {
+                    "range": {
+                      "@timestamp": {
+                        "gte": "now-5m"
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "_source": [
+              "message"
+            ]
+          }
+        }
+      }
+    },
+    "condition": {
+      "compare": {
+        "ctx.payload.hits.total": {
+          "gte": 1
+        }
+      }
+    },
+    "actions": {
+      "email_users": {
+        "email": {
+          "profile": "standard",
+          "attachments": {
+            "search-data.txt": {
+              "data": {
+                "format": "json"
+              }
+            }
+          },
+          "priority": "high",
+          "to": [
+            "richard@piedpiper.com",
+            "jared@piedpiper.com"
+          ],
+          "bcc": [
+            "gavin@hooli.com"
+          ],
+          "subject": "ALERT: {{ctx.payload.hits.total}} errors found in logs!",
+          "body": {
+            "html": "This alert triggered because a total of <b>{{ctx.payload.hits.total}}</b> error logs have been found within the last 5 minutes!<br><br>Copies of each error log is attached to this email."
+          }
+        }
+      }
+    },
+    "throttle_period": "15m"
+  }

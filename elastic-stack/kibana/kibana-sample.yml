@@ -1,0 +1,19 @@
+server.port: 5601
+server.host: "10.10.10.1"
+server.name: "my-hostname"
+elasticsearch.url: "http://elasticsearch:9200"
+
+elasticsearch.username: "kibana-user"
+elasticsearch.password: "BogusPassword123"
+
+xpack.reporting.encryptionKey: "my-secret-key"
+xpack.security.encryptionKey: "my-secret-encrypt-key"
+xpack.security.secureCookies: true
+
+xpack.monitoring.ui.enabled: false
+
+logging.dest: /var/log/kibana/kibana.log
+#logging.quiet: false
+#logging.verbose: true
+
+xpack.monitoring.kibana.collection.interval: 60000

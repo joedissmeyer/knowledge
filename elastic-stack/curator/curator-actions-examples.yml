@@ -1,0 +1,134 @@
+actions:
+  1:
+    action: delete_indices
+    description: >-
+      Delete the system-level .watcher-history- index data older than 30 days. It is a good idea to clean this up regularly.
+    options:
+      ignore_empty_list: True
+      timeout_override:
+      continue_if_exception: False
+      disable_action: false
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: .watcher-history-
+      exclude:
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 30
+      exclude:
+  2:
+    action: delete_indices
+    description: >-
+      Delete the system-level .reporting index data older than 60 days. Also another index that should be cleaned up regularly.
+    options:
+      ignore_empty_list: True
+      timeout_override:
+      continue_if_exception: False
+      disable_action: false
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: .reporting-
+      exclude:
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 60
+      exclude:
+  3:
+    action: delete_indices
+    description: >-
+      Delete indices with the pattern "my-index" that are older than 3 months using the months strategy.
+    options:
+      ignore_empty_list: True
+      timeout_override:
+      continue_if_exception: False
+      disable_action: false
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: my-index-
+      exclude:
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m'
+      unit: months
+      unit_count: 4
+      exclude:
+  4:
+    action: delete_indices
+    description: >-
+      Delete indices with the pattern "my-index" that are older than 30 days using the days strategy.
+    options:
+      ignore_empty_list: True
+      timeout_override:
+      continue_if_exception: False
+      disable_action: false
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: my-index-
+      exclude:
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 30
+      exclude:
+  5:
+    action: delete_indices
+    description: >-
+      Delete indices with the pattern "my-index" that are older than 15 days (i.e. 360 hours) using the hours strategy.
+    options:
+      ignore_empty_list: True
+      timeout_override:
+      continue_if_exception: False
+      disable_action: false
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: my-index-
+      exclude:
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d.%H'
+      unit: hours
+      unit_count: 360
+      exclude:
+  6:
+    action: forcemerge
+    description: >-
+      Perform a forceMerge on all DAILY indices to the max_num_segments of 1 per shard. It is ideal to merge all segments to 1.
+    options:
+      max_num_segments: 1
+      timeout_override: 21600
+    filters:
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 1
+  7:
+    action: forcemerge
+    description: >-
+      Perform a forceMerge on all MONTHLY indices to the max_num_segments of 1 per shard. It is ideal to merge all segments to 1.
+    options:
+      max_num_segments: 1
+      timeout_override: 21600
+    filters:
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m'
+      unit: months
+      unit_count: 1

@@ -1,0 +1,131 @@
+# Filebeat v6.x configuration example for Windows hosts.
+
+filebeat.inputs:
+
+# Solarwinds Orion log files
+# Multiline required. 
+- type: log
+  paths:
+    - 'C:\ProgramData\SolarWinds\Logs\Orion\Core.BusinessLayer.log'
+    - 'C:\ProgramData\SolarWinds\Logs\APM\APM.BusinessLayer.log'
+  fields:
+    pipeline_id: solarwinds_orion_logs
+  multiline.pattern: '^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}'
+  multiline.negate: true
+  multiline.match: after
+  multiline.max_lines: 1000
+  multiline.timeout: 5s
+
+# A lot of Windows applications write logs to disk in utf-16le-bom encoding.
+# Try this if you encounter problems with harvesting Windows app logs.
+- type: log
+  paths:
+    - 'C:\my\logs\my-windows-app.log'
+  fields:
+    pipeline_id: my-windows-app-log
+  encoding: "utf-16le-bom"
+
+# .Net Enterprise Libary app log where each new log event written to disk starts with the text "EVENT"
+- type: log
+  paths:
+    - 'C:\path\to\logs\*.log'
+  fields:
+    pipeline_id: dotnet_mobile_services_logs
+  multiline.pattern: '^\-*EVENT'
+  multiline.negate: true
+  multiline.match: after
+  multiline.max_lines: 1000
+  multiline.timeout: 5s
+
+# For MS Exchange message tracking logs
+- type: log
+  paths:
+    - 'C:\Program Files\Microsoft\Exchange Server\V15\TransportRoles\Logs\MessageTracking\MSGTRK*.LOG'
+  fields:
+    pipeline_id: exchange_message_tracking_logs
+
+# For Logstash logs
+- input_type: log
+  paths:
+    - C:\elastic\logstash\logs\logstash-plain.log
+  fields:
+    pipeline_id: logstash_logs
+  multiline.pattern: '^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}'
+  multiline.negate: true
+  multiline.match: after
+  multiline.max_lines: 1000
+  multiline.timeout: 5s
+
+# Microsoft IIS logs
+# Path can be different depending on IIS configuration. Reference the IIS Manager > Logging config.
+- type: log
+  paths:
+    - 'C:\INETPub\logs\LogFiles\*\*.log'
+  fields:
+    pipeline_id: microsoft_iis_logs
+
+# IBM Websphere logs
+# There are several possible permutations of the possilbe log path. Several examples are provided
+# Replace variables appropriately.
+# <server-id> = Name of the application instance. Could be "AppServer" or something similar.
+# <app-id> = The Websphere application id.
+- type: log
+  paths:
+    - 'C:\path\to\install\WebSphere\<server-id>\profiles\<server-id>\logs\<instance-id>\SystemOut.log'
+    - 'C:\path\to\install\WebSphere\<server-id>\profiles\<server-id>\logs\<instance-id>\SystemErr.log'
+  fields:
+    pipeline_id: websphere
+  multiline.pattern: ^\[
+  multiline.negate: true
+  multiline.match: after
+  multiline.max_lines: 1000
+  multiline.timeout: 5s
+
+# Tags example. Remove this if tags are not used.
+tags: ["orlando", "PROD"]
+
+# ---- Output examples. Note: Only one output can be enabled at any given time. If more than one are enabled then Filebeat startup will fail. ---
+
+# Elasticsearch output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/elasticsearch-output.html
+output.elasticsearch:
+  enabled: false
+  hosts: [ "elastic-ingest:9200" ]
+  username: "filebeat-user"
+  password: "BogusPassword123"
+
+# Kafka output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/kafka-output.html
+output.kafka:
+  enabled: false
+  hosts: ["kafka-server1:9092","kafka-server2:9092","kafka-server3.:9092"]
+  topic: '%{[fields][pipeline_id]}'
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: none
+
+# Logstash output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/logstash-output.html
+output.logstash:
+  enabled: false
+  hosts: [ "127.0.0.1:5044" ]
+
+# Filebeat logging config example
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: C:\elastic\filebeat\
+  name: filebeat.log
+  keepfiles: 7
+
+# Filebeat registry location
+filebeat.registry_file: C:\elastic\filebeat\registry
+
+# Filebeat monitoring config - only if Xpack is used in the cluster
+xpack.monitoring:
+  enabled: enabled
+  elasticsearch:
+    hosts: [ "elastic-ingest:9200"]
+    username: filebeat-user
+    password: BogusPassword123

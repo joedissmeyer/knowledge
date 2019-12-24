@@ -1,0 +1,29 @@
+{
+    "services": [
+        {
+            "id": "kafka",
+            "name": "kafka",
+            "tags": [ "prod", "kafka", "zookeeper" ],
+            "port": 9092,
+            "meta": {
+                "team": "Elastic team",
+                "service": "Elastic Stack",
+                "alert_contact": "joe@dissmeyer.com"
+            },
+            "checks": [
+                {
+                    "name": "Zookeeper TCP Port Check",
+                    "tcp": "127.0.0.1:2181",
+                    "interval": "10s",
+                    "notes": "Checks to make sure the Zookeeper listening port TCP 2181 is responding"
+                },
+                {
+                    "name": "Kafka TCP Port Check",
+                    "tcp": "127.0.0.1:9092",
+                    "interval": "10s",
+                    "notes": "Checks to make sure the Kafka listening port TCP 9092 is responding"
+                }
+            ]
+        }
+    ]
+}

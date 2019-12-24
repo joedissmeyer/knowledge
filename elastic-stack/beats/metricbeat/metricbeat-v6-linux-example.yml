@@ -1,0 +1,128 @@
+# Metricbeat v6.x configuration example for Linux hosts.
+
+metricbeat.modules:
+# System metrics - all standard OS-level metrics on a 60s collection interval
+# May need to include more diskio.include_devices in the array depending on the system config.
+- module: system
+  metricsets:
+    - cpu
+    - core
+    - diskio
+    - memory
+    - process
+  enabled: true
+  period: 60s
+  processes: ['.*']
+  process.include_top_n.by_cpu: 10
+  process.include_top_n.by_memory: 10
+  diskio.include_devices: ["sda", "sda1", "sda2", "sda3", "sdb", "sdb1", "sdb2", "sdb3"]
+  core.metrics: [percentages]
+  cpu.metrics: [percentages, normalized_percentages]
+
+# System metrics - specific to file system info on a 15m collection interval
+- module: system
+  metricsets:
+    - filesystem
+    - fsstat
+  enabled: true
+  period: 15m
+  filesystem.ignore_types: [nfs, smbfs, autofs]
+
+# System metrics - specific to OS reported uptime metric on a 1 hour collection interval.
+- module: system
+  metricsets:
+    - uptime
+  enable: true
+  period: 60m
+
+# System metrics - specific to NIC interface stats on a 15m collection interval.
+- module: system
+  metricsets:
+    - network
+  enable: true
+  period: 15m
+
+# Kafka metrics
+- module: kafka
+  metricsets: ["consumergroup", "partition"]
+  period: 60s
+  hosts: [ "localhost:9092" ]
+  client_id: metricbeat_poller
+  enabled: true
+
+# IBM Interact metrics collected from Jolokia agent on localhost
+- module: jolokia
+  metricsets: ["jmx"]
+  enabled: true
+  period: 60s
+  hosts: [ "127.0.0.1:9080" ]
+  namespace: "interact"
+  http_method: 'GET'
+  jmx.mappings:
+    - mbean: 'java.lang:type=Runtime'
+      attributes:
+        - attr: Uptime
+          field: uptime
+          event: uptime
+    - mbean: 'java.lang:type=GarbageCollector,name=MarkSweepCompact'
+      attributes:
+        - attr: CollectionTime
+          field: gc.cms_collection_time
+        - attr: CollectionCount
+          field: gc.cms_collection_count
+    - mbean: 'java.lang:type=Memory'
+      attributes:
+        - attr: HeapMemoryUsage
+          field: memory.heap_usage
+        - attr: NonHeapMemoryUsage
+          field: memory.non_heap_usage
+
+# Processor to drop events
+processors:
+ - drop_event:
+     when:
+        contains:
+          error.message: "connection refused"
+
+# ---- Output examples. Note: Only one output can be enabled at any given time. If more than one are enabled then Filebeat startup will fail. ---
+
+# Elasticsearch output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/elasticsearch-output.html
+output.elasticsearch:
+  enabled: false
+  hosts: [ "elastic-ingest:9200" ]
+  username: "filebeat-user"
+  password: "BogusPassword123"
+
+# Kafka output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/kafka-output.html
+output.kafka:
+  enabled: false
+  hosts: ["kafka-server1:9092","kafka-server2:9092","kafka-server3.:9092"]
+  topic: 'metricbeat'
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: none
+
+# Logstash output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/logstash-output.html
+output.logstash:
+  enabled: false
+  hosts: [ "127.0.0.1:5044" ]
+
+# Filebeat logging config example
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/metricbeat
+  name: metricbeat.log
+  keepfiles: 7
+
+# Filebeat monitoring config - only if Xpack is used in the cluster
+xpack.monitoring:
+  enabled: enabled
+  elasticsearch:
+    hosts: [ "elastic-ingest:9200"]
+    username: metricbeat-user
+    password: BogusPassword123

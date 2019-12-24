@@ -1,0 +1,25 @@
+{
+    "services": [
+        {
+            "id": "kibana",
+            "name": "kibana",
+            "tags": [ "prod" ],
+            "port": 5601,
+            "meta": {
+                "team": "Elastic team",
+                "service": "Elastic Stack",
+                "alert_contact": "joe@dissmeyer.com"
+            },
+            "checks": [
+                {
+                    "name": "Kibana HTTP health check",
+                    "header": {"Authorization":["Basic bG9nc3Rhc2g6bG9nc3Rhc2gxMjM="]},
+                    "http": "http://127.0.0.1:5601/api/status?pretty",
+                    "interval": "10s",
+                    "timeout": "2s",
+                    "notes": "Checks for a valid output of the Kibana HTTP health endpoint"
+                }
+            ]
+        }
+    ]
+}

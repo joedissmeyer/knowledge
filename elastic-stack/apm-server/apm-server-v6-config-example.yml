@@ -1,0 +1,27 @@
+apm-server:
+  host: "0.0.0.0:8200"
+  frontend.enabled: true
+
+setup.template.enabled: false
+setup.template.name: "apm-%{[beat.version]}"
+setup.template.pattern: "apm-%{[beat.version]}-*"
+setup.template.fields: "${path.config}/fields.yml"
+setup.template.overwrite: false
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+
+tags: ["PROD", "special-tag"]
+
+output.elasticsearch:
+  hosts: ["http://elastic-ingest:9200"]
+  index: "apm-%{[beat.version]}"
+  username: "apm-server-user"
+  password: "BogusPassword123"
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/apm-server
+  name: apm-server.log
+  keepfiles: 7

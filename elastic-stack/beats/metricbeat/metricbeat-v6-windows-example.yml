@@ -1,0 +1,81 @@
+# Metricbeat v6.x configuration example for Windows hosts.
+
+metricbeat.modules:
+- module: system
+  metricsets:
+    - cpu
+    - core
+    - diskio
+    - memory
+    - process
+    - process_summary
+  enabled: true
+  period: 60s
+  processes: ['.*']
+  process.include_top_n.by_cpu: 10
+  process.include_top_n.by_memory: 10
+  core.metrics: [percentages]
+  cpu.metrics: [percentages, normalized_percentages]
+
+- module: system
+  metricsets:
+    - filesystem
+    - fsstat
+  enabled: true
+  period: 5m
+  filesystem.ignore_types: [nfs, smbfs, autofs]
+
+- module: system
+  metricsets:
+    - uptime
+  enable: true
+  period: 60m
+
+- module: system
+  metricsets:
+    - network
+  enable: true
+  period: 5m
+
+# ---- Output examples. Note: Only one output can be enabled at any given time. If more than one are enabled then Filebeat startup will fail. ---
+
+# Elasticsearch output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/elasticsearch-output.html
+output.elasticsearch:
+  enabled: false
+  hosts: [ "elastic-ingest:9200" ]
+  username: "filebeat-user"
+  password: "BogusPassword123"
+
+# Kafka output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/kafka-output.html
+output.kafka:
+  enabled: false
+  hosts: ["kafka-server1:9092","kafka-server2:9092","kafka-server3.:9092"]
+  topic: 'metricbeat'
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: none
+
+# Logstash output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/logstash-output.html
+output.logstash:
+  enabled: false
+  hosts: [ "127.0.0.1:5044" ]
+
+# Filebeat logging config example
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: D:\elastic\metricbeat\
+  name: metricbeat.log
+  keepfiles: 7
+
+# Filebeat monitoring config - only if Xpack is used in the cluster
+xpack.monitoring:
+  enabled: enabled
+  elasticsearch:
+    hosts: [ "elastic-ingest:9200"]
+    username: metricbeat-user
+    password: BogusPassword123

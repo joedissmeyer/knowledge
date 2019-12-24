@@ -1,0 +1,50 @@
+# Sample HTTP monitors
+
+# Basic HTTPS check with all defaults enabled
+- type: http
+  name: "Name of monitor"
+  schedule: '@every 60s'
+  urls: [ "https://www.dissmeyer.com" ]
+
+# Standard HTTPS check with custom fields added
+- type: http
+  name: "Name of monitor"
+  schedule: '@every 60s'
+  urls: [ "https://www.dissmeyer.com" ]
+  fields_under_root: true
+  fields:
+    alert_contact: "joe@dissmeyer.com"
+    enabled_alerts: true
+    environment: "prod"
+    network: "public"
+
+# Multiple HTTPS monitors that are a member of the same group
+- type: http
+  name: "name of monitor group"
+  schedule: '@every 60s'
+  urls: [ "https://qa.dissmeyer.com",
+          "https://dev.dissmeyer.com",
+          "https://staging.dissmeyer.com",
+          "https://bogus.dissmeyer.com" ]
+  fields_under_root: true
+  check.response.status: 200
+  fields:
+    alert_contact: "joe@dissmeyer.com"
+    enabled_alerts: true
+    environment: "test"
+    network: "internal"
+
+# Standard HTTPS check, disable SSL verification
+- type: http
+  name: "Name of monitor"
+  schedule: '@every 60s'
+  urls: [ "https://www.dissmeyer.com" ]
+  check.response.status: 200
+  ssl.verification_mode: none
+
+# Standard HTTPS check, monitor state will be up when HTTP response is 401 unauthorized
+- type: http
+  name: "Name of monitor"
+  schedule: '@every 60s'
+  urls: [ "https://dev.dissmeyer.com" ]
+  check.response.status: 401

@@ -1,0 +1,122 @@
+{
+  "my-index-template" : {
+    "index_patterns" : [
+      "my-index-*"
+    ],
+    "settings" : {
+      "index" : {
+        "lifecycle" : {
+          "name" : "my-ilm-policy",
+          "rollover_alias" : "my-index-write-alias"
+        },
+        "routing" : {
+          "allocation" : {
+            "include" : {
+              "box_type" : "hot"
+            }
+          }
+        },
+        "mapping" : {
+          "ignore_malformed" : "true"
+        },
+        "refresh_interval" : "15s",
+        "number_of_shards" : "1",
+        "number_of_replicas" : "1"
+      }
+    },
+    "mappings" : {
+      "_doc" : {
+        "dynamic_templates" : [
+          {
+            "strings_as_keyword" : {
+              "mapping" : {
+                "type" : "keyword"
+              },
+              "match_mapping_type" : "string"
+            }
+          }
+        ],
+        "properties" : {
+          "headers" : {
+            "properties" : {
+              "vary" : {
+                "ignore_above" : 2048,
+                "type" : "keyword"
+              },
+              "host" : {
+                "ignore_above" : 2048,
+                "type" : "keyword"
+              },
+              "x-forwarded-for" : {
+                "ignore_above" : 2048,
+                "type" : "keyword"
+              }
+            }
+          },
+          "source" : {
+            "type" : "keyword"
+          },
+          "type" : {
+            "type" : "keyword"
+          },
+          "message" : {
+            "norms" : false,
+            "type" : "text"
+          },
+          "error" : {
+            "properties" : {
+              "reason" : {
+                "ignore_above" : 2048,
+                "type" : "keyword"
+              },
+              "stack" : {
+                "type" : "text"
+              },
+              "name" : {
+                "ignore_above" : 2048,
+                "type" : "keyword"
+              },
+              "description" : {
+                "ignore_above" : 2048,
+                "type" : "keyword"
+              },
+              "id" : {
+                "ignore_above" : 2048,
+                "type" : "keyword"
+              },
+              "statuscode" : {
+                "type" : "long"
+              }
+            }
+          },
+          "tags" : {
+            "type" : "keyword"
+          },
+          "duration" : {
+            "type" : "long"
+          },
+          "@timestamp" : {
+            "type" : "date"
+          },
+          "beat" : {
+            "properties" : {
+              "hostname" : {
+                "ignore_above" : 1024,
+                "type" : "keyword"
+              },
+              "name" : {
+                "ignore_above" : 1024,
+                "type" : "keyword"
+              },
+              "version" : {
+                "ignore_above" : 1024,
+                "type" : "keyword"
+              }
+            }
+          }
+        }
+      }
+    },
+    "aliases" : { }
+  }
+}

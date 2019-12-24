@@ -1,0 +1,150 @@
+# Filebeat v7.x configuration example for Linux hosts.
+
+filebeat.inputs:
+
+# Elasticsearch v6 logs
+# Edit the <cluster_name>
+# Assumes default logging config which requires multiline. Logs are written in plain text.
+# There is a json logging option for ES. Check official documentation.
+- type: log
+  paths:
+    - /var/log/elasticsearch/<cluster_name>.log
+  fields:
+    pipeline_id: elasticsearch_logs
+  multiline:
+    pattern: '^\[[0-9]{4}-[0-9]{2}-[0-9]{2}'
+    negate: true
+    match: after
+
+# Elasticsearch audit logs - assumes auditing is enabled for your cluster
+# Edit the <cluster_name>
+# Multiline not needed. Logs are written in json
+- type: log
+  paths:
+    - /var/log/elasticsearch/<cluster_name>_audit.log
+  fields:
+    pipeline_id: audit_logs
+
+
+# Apache NiFi logs
+# Multiline required. Logs are written in plain text
+- type: log
+  paths:
+    - /var/log/nifi/nifi-app.log
+  fields:
+    pipeline_id: apache_nifi_logs
+  multiline.pattern: ^\[20[12][[:digit:]]
+  multiline.negate: true
+  multiline.match: after
+  multiline.max_lines: 1000
+  multiline.timeout: 5s
+
+# Kibana logs
+# Multiline not needed. Logs are written in json
+- type: log
+  paths:
+    - /var/log/kibana/kibana.log
+  fields:
+    pipeline_id: kibana_logs
+
+# IBM DB2 logs
+# Multiline required. Logs are written in plain text
+- type: log
+  paths:
+    - /home/db2inst1/sqllib/db2dump/*.log
+  fields:
+    pipeline_id: db2logs
+  multiline.pattern: '^[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}'
+  multiline.negate: true
+  multiline.match: after
+  multiline.max_lines: 1000
+  multiline.timeout: 5s
+
+# For Elasticsearch Curator logs
+# Multiline not needed. Logs are written in plain text
+- type: log
+  paths:
+    - /var/log/curator/curator.log
+  fields:
+    pipeline_id: curator_log
+
+# HAProxy logs
+# Multiline not needed.
+- type: log
+  paths:
+    - /var/log/haproxy.log
+  fields:
+    pipeline_id: haproxy_logs
+
+# Nginx logs
+# Multiline not needed. Logs are written in json
+- input_type: log
+  paths:
+    - /var/log/nginx/*.log
+  fields:
+    pipeline_id: nginx_logs
+  exclude_files: ['\.gz$']
+
+# IBM WebSphere logs
+# Common path for DB2 servce logs: /opt/IBM/WebSphere/AppServer/profiles/live/logs/<serverId>/
+# Common path for Solr error logs: /opt/IBM/WebSphere/AppServer/profiles/live_solr/logs/<solrId>/
+- type: log
+  paths:
+    - /path/to/DB2-service-logs/SystemOut.log
+    - /path/to/DB2-service-logs/SystemErr.log
+    - /path/to/solr-error-logs/SystemErr.log
+  fields:
+    pipeline_id: websphere
+  multiline.pattern: ^\[
+  multiline.negate: true
+  multiline.match: after
+  multiline.max_lines: 1000
+  multiline.timeout: 5s
+
+# Tags example. Remove this if tags are not used.
+tags: ["orlando", "PROD"]
+
+
+# ---- Output examples. Note: Only one output can be enabled at any given time. If more than one are enabled then Filebeat startup will fail. ---
+
+# Elasticsearch output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/elasticsearch-output.html
+output.elasticsearch:
+  enabled: false
+  hosts: [ "elastic-ingest:9200" ]
+  username: "filebeat-user"
+  password: "BogusPassword123"
+
+# Kafka output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/kafka-output.html
+output.kafka:
+  enabled: false
+  hosts: ["kafka-server1:9092","kafka-server2:9092","kafka-server3.:9092"]
+  topic: '%{[fields][pipeline_id]}'
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: none
+
+# Logstash output
+# Reference documentation: https://www.elastic.co/guide/en/beats/filebeat/current/logstash-output.html
+output.logstash:
+  enabled: false
+  hosts: [ "127.0.0.1:5044" ]
+
+# Filebeat logging config example
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat.log
+  keepfiles: 7
+
+# Filebeat monitoring config - only if Xpack is used in the cluster
+monitoring:
+  enabled: enabled
+  elasticsearch:
+    hosts: [ "elastic-ingest:9200"]
+    username: filebeat-user
+    password: BogusPassword123
+    

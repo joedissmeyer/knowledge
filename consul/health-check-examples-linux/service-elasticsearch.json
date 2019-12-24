@@ -1,0 +1,25 @@
+{
+    "services": [ 
+        {
+            "id": "elasticsearch",
+            "name": "elasticsearch",
+            "tags": [ "prod" ],
+            "port": 9200,
+            "meta": {
+                "team": "Elastic team",
+                "service": "Elastic Stack",
+                "alert_contact": "joe@dissmeyer.com"
+            },
+            "checks": [
+                {
+                    "name": "Elasticsearch health check",
+                    "header": {"Authorization":["Basic bG9nc3Rhc2g6bG9nc3Rhc2gxMjM="]},
+                    "http": "http://127.0.0.1:9200/_cluster/health?pretty",
+                    "interval": "10s",
+                    "timeout": "2s",
+                    "notes": "Checks for a valid output of the Elasticsearch HTTP health endpoint"
+                }
+            ]
+        }
+    ]
+}

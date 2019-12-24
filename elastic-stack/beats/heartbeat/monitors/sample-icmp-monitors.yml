@@ -1,0 +1,38 @@
+# Sample ICMP monitors
+
+# Standard localhost PING check
+- type: icmp
+  name: "Test Ping for localhost"
+  schedule: "@every 60s"
+  wait: "15s"
+  hosts:
+    - 127.0.0.1
+
+# Standard group PING check, where all members are of the same group
+- type: icmp
+  name: "My ping check group"
+  schedule: "@every 60s"
+  wait: "15s"
+  hosts:
+    - server-host1.dissmeyer.com
+    - server-host2.dissmeyer.com
+    - server-host3.dissmeyer.com
+
+# Group ping check with custom fields added. Includes latitude and longitude example.
+# See Logstash heartbeat pipeline for example on how to process lat+lon to use with Kibana Maps
+- type: icmp
+  name: "Group ping check with custom fields added"
+  schedule: "@every 60s"
+  wait: "15s"
+  hosts:
+    - server-host1.dissmeyer.com
+    - server-host2.dissmeyer.com
+    - server-host3.dissmeyer.com
+  fields_under_root: true
+  fields:
+    contact: "joe@dissmeyer.com"
+    environment: "prod"
+    network: "public"
+    lat: 44.512955
+    lon: -64.288867
+    

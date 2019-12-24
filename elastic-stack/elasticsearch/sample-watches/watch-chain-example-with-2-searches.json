@@ -1,0 +1,104 @@
+{
+    "trigger": {
+      "schedule": {
+        "interval": "5m"
+      }
+    },
+    "input": {
+      "chain": {
+        "inputs": [
+          {
+            "first": {
+              "search": {
+                "request": {
+                  "search_type": "query_then_fetch",
+                  "indices": [
+                    "my-index-*"
+                  ],
+                  "types": [],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "must": [
+                          {
+                            "query_string": {
+                              "query": "\"my search terms\""
+                            }
+                          },
+                          {
+                            "range": {
+                              "@timestamp": {
+                                "gte": "now-15m"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "second": {
+              "search": {
+                "request": {
+                  "search_type": "query_then_fetch",
+                  "indices": [
+                    "my-index-*"
+                  ],
+                  "types": [],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "must": [
+                          {
+                            "query_string": {
+                              "query": "ERROR"
+                            }
+                          },
+                          {
+                            "range": {
+                              "@timestamp": {
+                                "gte": "now-15m"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "condition": {
+      "script": {
+        "source": "return ctx.payload.first.hits.total >= 1 && ctx.payload.second.hits.total >= 1",
+        "lang": "painless"
+      }
+    },
+    "actions": {
+      "email_users": {
+        "email": {
+          "profile": "standard",
+          "to": [
+            "richard@piedpiper.com",
+            "jared@piedpiper.com"
+          ],
+          "bcc": [
+            "gavin@hooli.com"
+          ],
+          "subject": "ALERT: Server errors detected in logs!",
+          "body": {
+            "html": "This alert triggered because a total of <b>{{ctx.payload.first.hits.total}}</b> timeouts and <b>{{ctx.payload.second.hits.total}}</b> errors were found in the logs within the last 15 minutes."
+          }
+        }
+      }
+    },
+    "throttle_period": "10m"
+  }

@@ -1,0 +1,23 @@
+{
+    "services": [
+        {
+            "id": "heartbeat-elastic",
+            "name": "heartbeat-elastic",
+            "tags": [ "prod" ],
+            "port": 8200,
+            "meta": {
+                "team": "Elastic team",
+                "service": "Elastic Stack",
+                "alert_contact": "joe@dissmeyer.com"
+            },
+            "checks": [
+                {
+                    "name": "Heartbeat local service check",
+                    "alias_service": "hearbeat-elastic",
+                    "interval": "10s",
+                    "notes": "Verifies the heartbeat-elastic service is running"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,11 @@
+# This is a sample logstash instance configuration file. 
+# File name and directory is typically /etc/logstash/logstash.yml
+
+http.host: "0.0.0.0"
+http.port: 9600-9700
+path.logs: /var/log/logstash
+
+xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.hosts: ["http://elastic-ingest-host:9200"]
+xpack.monitoring.elasticsearch.username: "logstash-user"
+xpack.monitoring.elasticsearch.password: "BogusPassword123"

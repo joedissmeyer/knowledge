@@ -1,0 +1,23 @@
+{
+    "services": [
+        {
+            "id": "elastic-apm-server",
+            "name": "elastic-apm-server",
+            "tags": [ "prod" ],
+            "port": 8200,
+            "meta": {
+                "team": "Elastic team",
+                "service": "Elastic Stack",
+                "alert_contact": "joe@dissmeyer.com"
+            },
+            "checks": [
+                {
+                    "name": "Elastic APM Server HTTP Health Check",
+                    "http": "http://127.0.0.1:8200/?pretty",
+                    "interval": "10s",
+                    "notes": "Checks for a valid output of the APM Server HTTP health endpoint"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,3 @@
+# Example for defining a custom UUID pattern.
+
+UUID2 [A-Fa-f0-9]{32}

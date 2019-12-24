@@ -1,0 +1,65 @@
+# Rename to `.gitlab-ci.yml`
+
+stages:
+  - test
+  - deploy_to_test
+  - deploy_to_prod
+
+test:
+  stage: test
+  variables:
+    ErrorActionPreference: STOP
+  script: 
+    - .\tests\duplicate_http_monitor_checks.ps1
+  environment:
+    name: qa
+  only:
+    - master
+  tags:
+    - heartbeat
+    - internal
+
+first-stage:
+  stage: deploy_to_test
+  dependencies:
+    - test
+  script:
+    - Remove-Item C:\elastic\heartbeat\monitors\*.* -Force -ErrorAction Ignore; echo "force to continue script"
+    - Copy-Item .\monitors\*.yml C:\elastic\heartbeat\monitors\ -ErrorAction Ignore; echo "force to continue script"
+    - Copy-Item .\heartbeat.yml C:\elastic\heartbeat\heartbeat.yml
+    - Restart-Service -Name heartbeat
+  environment:
+    name: qa
+  only:
+    - master
+  tags:
+    - heartbeat
+    - qa
+   
+
+# -------------------------------------------------------------------
+# -------------------------------------------------------------------
+# ----------------   START OF PRODUCTION  ---------------------------
+# ----------------       DEPLOY JOBS      ---------------------------
+# ----------------                        ---------------------------
+# -------------------------------------------------------------------
+# -------------------------------------------------------------------
+
+second-stage:
+  stage: deploy_to_prod
+  dependencies:
+    - test
+    - deploy_to_test
+  script:
+    - Remove-Item C:\elastic\heartbeat\monitors\*.* -Force -ErrorAction Ignore; echo "force to continue script"
+    - Copy-Item .\monitors\*.yml C:\elastic\heartbeat\monitors\ -ErrorAction Ignore; echo "force to continue script"
+    - Copy-Item .\heartbeat.yml C:\elastic\heartbeat\heartbeat.yml
+    - Restart-Service -Name heartbeat
+  #when: manual
+  environment:
+    name: prod
+  only:
+    - master
+  tags:
+    - heartbeat
+    - prod

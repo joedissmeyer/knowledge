@@ -1,0 +1,51 @@
+# Windows configuration for Heartbeat v6.x
+
+heartbeat.config.monitors:
+  path: C:\elastic\heartbeat\monitors\*\*.yml
+  reload.enabled: true
+  reload.period: 5s
+
+# Add custom fields
+fields:
+  network_zone: internal
+  datacenter: aws-west
+
+# ---- Output examples. Note: Only one output can be enabled at any given time. If more than one are enabled then Filebeat startup will fail. ---
+
+# Elasticsearch output
+output.elasticsearch:
+  enabled: false
+  hosts: [ "elastic-ingest:9200" ]
+  username: "heartbeat-user"
+  password: "BogusPassword123"
+
+# Kafka output
+output.kafka:
+  enabled: false
+  hosts: ["kafka-server1:9092","kafka-server2:9092","kafka-server3.:9092"]
+  topic: 'heartbeat'
+  partition.round_robin:
+    reachable_only: false
+  required_acks: 1
+  compression: none
+
+# Logstash output
+output.logstash:
+  enabled: false
+  hosts: [ "127.0.0.1:5044" ]
+
+# Heartbeat logging config example
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: C:\elastic\heartbeat
+  name: heartbeat.log
+  keepfiles: 7
+
+# Heartbeat monitoring config - only if Xpack is used in the cluster
+xpack.monitoring:
+  enabled: enabled
+  elasticsearch:
+    hosts: [ "elastic-ingest:9200"]
+    username: heartbeat-user
+    password: BogusPassword123

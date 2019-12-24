@@ -1,0 +1,23 @@
+{
+    "services": [
+        {
+            "id": "windows-service",
+            "name": "windows-service",
+            "tags": [ "prod", "windows" ],
+            "port": 8500,
+            "meta": {
+                "team": "Elastic team",
+                "service": "Elastic Stack",
+                "alert_contact": "joe@dissmeyer.com"
+            },
+            "checks": [
+                {
+                    "name": "Windows Service Check",
+                    "args": [ "cmd", "/c", "powershell -ExecutionPolicy Bypass -NoProfile -File C:\\consul\\scripts\\windows-serivce-check-script.ps1" ],
+                    "interval": "10s",
+                    "notes": "Runs powershell script to verify the specified Windows service is running on the server"
+                }
+            ]
+        }
+    ]
+}

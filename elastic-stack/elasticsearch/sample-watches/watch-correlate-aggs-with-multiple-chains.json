@@ -1,0 +1,134 @@
+{
+    "trigger": {
+      "schedule": {
+        "interval": "5m"
+      }
+    },
+    "input": {
+      "chain": {
+        "inputs": [
+          {
+            "first": {
+              "search": {
+                "request": {
+                  "search_type": "query_then_fetch",
+                  "indices": [
+                    "my-index-*"
+                  ],
+                  "types": [],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "must": [
+                          {
+                            "query_string": {
+                              "query": "\"first correlation\""
+                            }
+                          },
+                          {
+                            "range": {
+                              "@timestamp": {
+                                "gte": "now-5m"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "aggs": {
+                      "id": {
+                        "terms": {
+                          "field": "correlationId",
+                          "size": 100
+                        }
+                      }
+                    },
+                    "size": 0
+                  }
+                }
+              }
+            }
+          },
+          {
+            "second": {
+              "search": {
+                "request": {
+                  "search_type": "query_then_fetch",
+                  "indices": [
+                    "my-index-*"
+                  ],
+                  "types": [],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "must": [
+                          {
+                            "terms": {
+                              "correlationId": [
+                                "{{#ctx.payload.first.aggregations.id.buckets}}{{key}}",
+                                "{{/ctx.payload.first.aggregations.id.buckets}}"
+                              ]
+                            }
+                          },
+                          {
+                            "range": {
+                              "@timestamp": {
+                                "gte": "now-5m"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "aggs": {
+                      "order": {
+                        "terms": {
+                          "field": "my-field",
+                          "size": 100
+                        },
+                        "aggs": {
+                          "dt": {
+                            "terms": {
+                              "field": "@timestamp",
+                              "size": 100
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "size": 0
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "condition": {
+      "compare": {
+        "ctx.payload.first.hits.total": {
+          "gte": 1
+        }
+      }
+    },
+    "actions": {
+      "email_users": {
+        "email": {
+          "profile": "standard",
+          "to": [
+            "richard@piedpiper.com",
+            "jared@piedpiper.com"
+          ],
+          "bcc": [
+            "gavin@hooli.com"
+          ],
+          "subject": "ALERT: Correlations found",
+          "body": {
+            "html": "Correlations found within the last 5 minutes.<br>List of items in the field aggregation:<br><br>{{#ctx.payload.second.aggregations.order.buckets}} {{key}}   at   {{dt.buckets.0.key_as_string}} (UTC)<br>{{/ctx.payload.second.aggregations.order.buckets}}"
+          }
+        }
+      }
+    },
+    "throttle_period": "15m"
+  }

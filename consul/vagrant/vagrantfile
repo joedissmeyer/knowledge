@@ -1,0 +1,78 @@
+# Vagrantfile for setting up a 3 node Consul 1.6.1 datacenter and 3 clients.
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "consulserver1" do |consulserver1|
+    consulserver1.vm.box = "centos/7"
+    consulserver1.vm.hostname = "consulserver1"
+    consulserver1.vm.network :private_network, ip: "192.168.56.101"
+    consulserver1.vm.network "8500_port", guest: 8500, host: 8500
+    consulserver1.vm.network "tls_port", guest: 8501, host: 8501
+    consulserver1.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "1024"
+      vb.name = "consulserver1"
+    end
+    consulserver1.vm.provision :shell, path: "scripts/consulserver1_provision.sh"
+  end
+  config.vm.define "consulserver2" do |consulserver2|
+    consulserver2.vm.box = "centos/7"
+    consulserver2.vm.hostname = "consulserver2"
+    consulserver2.vm.network :private_network, ip: "192.168.56.102"
+    consulserver2.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "1024"
+      vb.name = "consulserver2"
+    end
+    consulserver2.vm.provision :shell, path: "scripts/consulserver2_provision.sh"
+  end
+  config.vm.define "consulserver3" do |consulserver3|
+    consulserver3.vm.box = "centos/7"
+    consulserver3.vm.hostname = "consulserver3"
+    consulserver3.vm.network :private_network, ip: "192.168.56.103"
+    consulserver3.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "1024"
+      vb.name = "consulserver3"
+    end
+    consulserver3.vm.provision :shell, path: "scripts/consulserver3_provision.sh"
+  end
+  config.vm.define "consulclient1" do |consulclient1|
+    consulclient1.vm.box = "centos/7"
+    consulclient1.vm.hostname = "consulclient1"
+    consulclient1.vm.network :private_network, ip: "192.168.56.111"
+    consulclient1.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "1024"
+      vb.name = "consulclient1"
+    end
+    consulclient1.vm.provision :shell, path: "scripts/consulclient1_provision.sh"
+  end
+  config.vm.define "consulclient2" do |consulclient2|
+    consulclient2.vm.box = "centos/7"
+    consulclient2.vm.hostname = "consulclient2"
+    consulclient2.vm.network :private_network, ip: "192.168.56.112"
+    consulclient2.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "1024"
+      vb.name = "consulclient2"
+    end
+    consulclient2.vm.provision :shell, path: "scripts/consulclient2_provision.sh"
+  end
+  config.vm.define "consulclient3" do |consulclient3|
+    consulclient3.vm.box = "centos/7"
+    consulclient3.vm.hostname = "consulclient3"
+    consulclient3.vm.network :private_network, ip: "192.168.56.113"
+    consulclient3.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "1024"
+      vb.name = "consulclient3"
+    end
+    consulclient3.vm.provision :shell, path: "scripts/consulclient3_provision.sh"
+  end
+  
+  # Enable provisioning with a shell script.
+  config.vm.provision "shell", inline: <<-SHELL
+    yum -y install wget unzip
+  SHELL
+end

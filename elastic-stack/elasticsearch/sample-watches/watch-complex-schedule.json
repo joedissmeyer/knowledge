@@ -1,0 +1,144 @@
+{
+    "trigger": {
+      "schedule": {
+        "daily": {
+          "at": [
+            {
+              "hour": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23
+              ],
+              "minute": [
+                0,
+                10,
+                20,
+                30,
+                40,
+                50
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "input": {
+      "chain": {
+        "inputs": [
+          {
+            "first": {
+              "search": {
+                "request": {
+                  "search_type": "query_then_fetch",
+                  "indices": [
+                    "my-index-*"
+                  ],
+                  "types": [],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "must": [
+                          {
+                            "query_string": {
+                              "query": "\"my search terms\""
+                            }
+                          },
+                          {
+                            "range": {
+                              "@timestamp": {
+                                "gte": "now-10m"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "_source": [
+                      "message"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "second": {
+              "search": {
+                "request": {
+                  "search_type": "query_then_fetch",
+                  "indices": [
+                    "my-index-*"
+                  ],
+                  "types": [],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "must": [
+                          {
+                            "query_string": {
+                              "query": "\"my search term two\""
+                            }
+                          },
+                          {
+                            "range": {
+                              "@timestamp": {
+                                "gte": "now-10m"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "_source": [
+                      "status"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "condition": {
+      "script": {
+        "source": "return ctx.payload.first.hits.total > 10 && ctx.payload.second.hits.total == 0",
+        "lang": "painless"
+      }
+    },
+    "actions": {
+      "email_users": {
+        "email": {
+          "profile": "standard",
+          "to": [
+            "richard@piedpiper.com",
+            "jared@piedpiper.com"
+          ],
+          "bcc": [
+            "gavin@hooli.com"
+          ],
+          "subject": "ALERT: complex schedule watch",
+          "body": {
+            "html": "This watch executes every 10 minutes, but will not execute between the hours of 06:00 and 10:59 UTC"
+          }
+        }
+      }
+    },
+    "throttle_period": "15m"
+  }

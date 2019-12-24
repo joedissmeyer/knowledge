@@ -1,0 +1,17 @@
+# Run at 1am local system time
+0 1 * * * /usr/bin/curator --config /opt/elasticsearch-curator/config/curator-config-example.yml /opt/elasticsearch-curator/config/actions-examples.yml
+
+# Run at 1:15am local system time
+15 1 * * * /usr/bin/curator --config /opt/elasticsearch-curator/config/curator-config-example.yml /opt/elasticsearch-curator/config/actions-examples.yml
+
+# Run at 1:30am local system time
+30 1 * * * /usr/bin/curator --config /opt/elasticsearch-curator/config/curator-config-example.yml /opt/elasticsearch-curator/config/actions-examples.yml
+
+# Run at 3am local system time
+0 3 * * * /usr/bin/curator --config /opt/elasticsearch-curator/config/curator-config-example.yml /opt/elasticsearch-curator/config/actions-examples.yml
+
+# Run at 4am local system time
+0 4 * * * /usr/bin/curator --config /opt/elasticsearch-curator/config/curator-config-example.yml /opt/elasticsearch-curator/config/actions-examples.yml
+
+# Run at 5am local system time
+0 5 * * * /usr/bin/curator --config /opt/elasticsearch-curator/config/curator-config-example.yml /opt/elasticsearch-curator/config/actions-examples.yml

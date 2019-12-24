@@ -1,0 +1,23 @@
+{
+    "services": [
+        {
+            "id": "logstash",
+            "name": "logstash",
+            "tags": [ "prod" ],
+            "port": 9600,
+            "meta": {
+                "team": "Elastic team",
+                "service": "Elastic Stack",
+                "alert_contact": "joe@dissmeyer.com"
+            },
+            "checks": [
+                {
+                    "name": "Logstash HTTP heath check",
+                    "http": "http://127.0.0.1:9600?pretty",
+                    "interval": "10s",
+                    "notes": "Checks for a valid output of the Logstash HTTP health endpoint"
+                }
+            ]
+        }
+    ]
+}
