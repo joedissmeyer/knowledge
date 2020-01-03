@@ -1,0 +1,10 @@
+{
+    "watches": [
+        {
+            "type": "checks",
+            "service": "elasticsearch",
+            "args": ["/etc/scripts/restart_elasticsearch.sh"],
+            "notes": "Watch to restart elasticsearch when a health checks is critical"
+        }
+    ]
+}
