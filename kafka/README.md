@@ -15,3 +15,14 @@ Partition replication occurs automatically at topic creation (provided the parti
 ## Vagrant
 
 To stand up a quick test lab for a 3 node Kafka cluster check the provided Vagrantfile in the `./vagrant` directory.
+
+Server 1: kakfa1 (192.168.56.101)
+Server 2: kafka2 (192.168.56.102)
+Server 3: kafka3 (192.168.56.102)
+
+Assumes VirtualBox is the virtualization platform of choice.
+
+Each VM is configured for the following: 
+1 vCPU
+1GB RAM
+Standard `centos/7` vagrant box image

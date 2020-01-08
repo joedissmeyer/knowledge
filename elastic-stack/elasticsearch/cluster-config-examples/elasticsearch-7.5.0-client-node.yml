@@ -1,4 +1,4 @@
-cluster.name: uo-uat
+cluster.name: my-cluster
 node.name: ${HOSTNAME}
 bootstrap.memory_lock: true
 node.master: false
@@ -7,7 +7,7 @@ node.ingest: false
 node.ml: false
 network.host: [ "_eth0_", "_local_" ]
 http.port: 9200
-discovery.zen.ping.unicast.hosts: ["elastic-master-node1", "elastic-master-node2", "elastic-master-node2"]
+discovery.seed_hosts: ["elastic-master-node1", "elastic-master-node2", "elastic-master-node2"]
 discovery.zen.minimum_master_nodes: 2
 node.max_local_storage_nodes: 2
 

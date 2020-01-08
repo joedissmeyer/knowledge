@@ -1,0 +1,51 @@
+# Vagrantfile for setting up a 6 node Elasticsearch v7.5.1.
+# 3 nodes, all have the master and data roles
+# 1 Kibana node
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "elasticmaster1" do |elasticmaster1|
+    elasticmaster1.vm.box = "centos/7"
+    elasticmaster1.vm.hostname = "elasticmaster1"
+    elasticmaster1.vm.network :private_network, ip: "192.168.56.111"
+    elasticmaster1.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "2048"
+      vb.name = "elasticmaster1"
+    end
+    elasticmaster1.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
+  end
+  config.vm.define "elasticmaster2" do |elasticmaster2|
+    elasticmaster2.vm.box = "centos/7"
+    elasticmaster2.vm.hostname = "elasticmaster2"
+    elasticmaster2.vm.network :private_network, ip: "192.168.56.112"
+    elasticmaster2.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "2048"
+      vb.name = "elasticmaster2"
+    end
+    elasticmaster2.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
+  end
+  config.vm.define "elasticmaster3" do |elasticmaster3|
+    elasticmaster3.vm.box = "centos/7"
+    elasticmaster3.vm.hostname = "elasticmaster3"
+    elasticmaster3.vm.network :private_network, ip: "192.168.56.113"
+    elasticmaster3.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "2048"
+      vb.name = "elasticmaster3"
+    end
+    elasticmaster3.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
+  end
+  config.vm.define "kibana" do |kibana|
+    kibana.vm.box = "centos/7"
+    kibana.vm.hostname = "kibana1"
+    kibana.vm.network :private_network, ip: "192.168.56.114"
+    kibana.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "2048"
+      vb.name = "kibana"
+    end
+    kibana.vm.provision :shell, path: "scripts/kibana_node_provision.sh"
+  end
+end
