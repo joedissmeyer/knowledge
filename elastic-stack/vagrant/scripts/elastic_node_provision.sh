@@ -25,7 +25,7 @@ sudo echo '192.168.56.111 elasticmaster1 elasticmaster1' >> /etc/hosts
 sudo echo '192.168.56.112 elasticmaster2 elasticmaster2' >> /etc/hosts
 sudo echo '192.168.56.113 elasticmaster3 elasticmaster3' >> /etc/hosts
 sudo echo '192.168.56.114 kibana kibana' >> /etc/hosts
-sudo echo '192.168.56.114 logstash logstash' >> /etc/hosts
+sudo echo '192.168.56.115 logstash logstash' >> /etc/hosts
 
 # Install OpenJRE 11 and wget
 

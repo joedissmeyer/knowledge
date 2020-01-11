@@ -14,9 +14,9 @@ Vagrant.configure("2") do |config|
       vb.name = "elasticmaster1"
     end
     elasticmaster1.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
-    elasticmaster1.vm.provision :shell, path: "scripts/metricbeat.sh"
-    elasticmaster1.vm.provision :shell, path: "scripts/filebeat.sh"
-    elasticmaster1.vm.provision :shell, path: "scripts/auditbeat.sh"
+    elasticmaster1.vm.provision :shell, path: "scripts/metricbeat-install-only.sh"
+    elasticmaster1.vm.provision :shell, path: "scripts/filebeat-install-only.sh"
+    elasticmaster1.vm.provision :shell, path: "scripts/auditbeat-install-only.sh"
   end
   config.vm.define "elasticmaster2" do |elasticmaster2|
     elasticmaster2.vm.box = "centos/7"
@@ -28,9 +28,9 @@ Vagrant.configure("2") do |config|
       vb.name = "elasticmaster2"
     end
     elasticmaster2.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
-    elasticmaster2.vm.provision :shell, path: "scripts/metricbeat.sh"
-    elasticmaster2.vm.provision :shell, path: "scripts/filebeat.sh"
-    elasticmaster2.vm.provision :shell, path: "scripts/auditbeat.sh"
+    elasticmaster2.vm.provision :shell, path: "scripts/metricbeat-install-only.sh"
+    elasticmaster2.vm.provision :shell, path: "scripts/filebeat-install-only.sh"
+    elasticmaster2.vm.provision :shell, path: "scripts/auditbeat-install-only.sh"
   end
   config.vm.define "elasticmaster3" do |elasticmaster3|
     elasticmaster3.vm.box = "centos/7"
@@ -42,9 +42,9 @@ Vagrant.configure("2") do |config|
       vb.name = "elasticmaster3"
     end
     elasticmaster3.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
-    elasticmaster3.vm.provision :shell, path: "scripts/metricbeat.sh"
-    elasticmaster3.vm.provision :shell, path: "scripts/filebeat.sh"
-    elasticmaster3.vm.provision :shell, path: "scripts/auditbeat.sh"
+    elasticmaster3.vm.provision :shell, path: "scripts/metricbeat-install-only.sh"
+    elasticmaster3.vm.provision :shell, path: "scripts/filebeat-install-only.sh"
+    elasticmaster3.vm.provision :shell, path: "scripts/auditbeat-install-only.sh"
   end
   config.vm.define "kibana" do |kibana|
     kibana.vm.box = "centos/7"
@@ -52,12 +52,12 @@ Vagrant.configure("2") do |config|
     kibana.vm.network :private_network, ip: "192.168.56.114"
     kibana.vm.provider "virtualbox" do |vb|
       vb.gui = false
-      vb.memory = "1048"
+      vb.memory = "2048"
       vb.name = "kibana"
     end
     kibana.vm.provision :shell, path: "scripts/kibana_node_provision.sh"
-    kibana.vm.provision :shell, path: "scripts/metricbeat.sh"
-    kibana.vm.provision :shell, path: "scripts/filebeat.sh"
-    kibana.vm.provision :shell, path: "scripts/auditbeat.sh"
+    kibana.vm.provision :shell, path: "scripts/metricbeat-full-setup.sh"
+    kibana.vm.provision :shell, path: "scripts/filebeat-full-setup.sh"
+    kibana.vm.provision :shell, path: "scripts/auditbeat-full-setup.sh"
   end
 end

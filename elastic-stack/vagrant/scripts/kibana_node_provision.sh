@@ -25,7 +25,7 @@ sudo echo '192.168.56.111 elasticmaster1 elasticmaster1' >> /etc/hosts
 sudo echo '192.168.56.112 elasticmaster2 elasticmaster2' >> /etc/hosts
 sudo echo '192.168.56.113 elasticmaster3 elasticmaster3' >> /etc/hosts
 sudo echo '192.168.56.114 kibana kibana' >> /etc/hosts
-sudo echo '192.168.56.114 logstash logstash' >> /etc/hosts
+sudo echo '192.168.56.115 logstash logstash' >> /etc/hosts
 
 # Install wget
 
@@ -39,11 +39,10 @@ sudo rm -rf kibana-7.5.1-x86_64.rpm
 
 # Configure the kibana.yml
 
-sudo rm -rf /etc/kibana/kibana.yml 
+sudo rm -rf /etc/kibana/kibana.yml
 sudo cat > /etc/kibana/kibana.yml <<'EOF'
 server.port: 5601
-server.host: "kibana"
-server.name: "kibana"
+server.host: "0.0.0.0"
 elasticsearch.hosts: [ "http://elasticmaster1:9200" ]
 logging.dest: /var/log/kibana/kibana.log
 logging.quiet: false
@@ -57,7 +56,6 @@ mkdir /var/log/kibana
 # Fix permissions
 
 chown -R kibana:kibana /var/log/kibana
-chown -R kibana:kibana /usr/share/kibana/
 
 # Enable Kibana at startup and start Kibana
 
