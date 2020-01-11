@@ -22,7 +22,7 @@ setup.dashboards.enabled: true
 setup.kibana:
   host: "kibana:5601"
 output.elasticsearch:
-  hosts: ["elasticmaster1:9200","elasticmaster2:9200","elasticmaster3:9200"]
+  hosts: ["elastic1:9200","elastic2:9200","elastic3:9200"]
 logging.level: info
 logging.to_files: true
 logging.files:
@@ -31,11 +31,13 @@ logging.files:
   keepfiles: 7
 monitoring.enabled: true
 monitoring.elasticsearch:
+
 EOF
 
 # Run Metricbeat setup (index template, dashboards, ILM policy)
 
 sudo metricbeat setup
+sudo metricbeat modules enable system
 
 # Start Metricbeat
 

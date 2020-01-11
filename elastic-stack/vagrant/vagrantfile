@@ -4,47 +4,47 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.define "elasticmaster1" do |elasticmaster1|
-    elasticmaster1.vm.box = "centos/7"
-    elasticmaster1.vm.hostname = "elasticmaster1"
-    elasticmaster1.vm.network :private_network, ip: "192.168.56.111"
-    elasticmaster1.vm.provider "virtualbox" do |vb|
+  config.vm.define "elastic1" do |elastic1|
+    elastic1.vm.box = "centos/7"
+    elastic1.vm.hostname = "elastic1"
+    elastic1.vm.network :private_network, ip: "192.168.56.111"
+    elastic1.vm.provider "virtualbox" do |vb|
       vb.gui = false
       vb.memory = "2048"
-      vb.name = "elasticmaster1"
+      vb.name = "elastic1"
     end
-    elasticmaster1.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
-    elasticmaster1.vm.provision :shell, path: "scripts/metricbeat-install-only.sh"
-    elasticmaster1.vm.provision :shell, path: "scripts/filebeat-install-only.sh"
-    elasticmaster1.vm.provision :shell, path: "scripts/auditbeat-install-only.sh"
+    elastic1.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
+    elastic1.vm.provision :shell, path: "scripts/metricbeat-install-only.sh"
+    elastic1.vm.provision :shell, path: "scripts/filebeat-install-only.sh"
+    elastic1.vm.provision :shell, path: "scripts/auditbeat-install-only.sh"
   end
-  config.vm.define "elasticmaster2" do |elasticmaster2|
-    elasticmaster2.vm.box = "centos/7"
-    elasticmaster2.vm.hostname = "elasticmaster2"
-    elasticmaster2.vm.network :private_network, ip: "192.168.56.112"
-    elasticmaster2.vm.provider "virtualbox" do |vb|
+  config.vm.define "elastic2" do |elastic2|
+    elastic2.vm.box = "centos/7"
+    elastic2.vm.hostname = "elastic2"
+    elastic2.vm.network :private_network, ip: "192.168.56.112"
+    elastic2.vm.provider "virtualbox" do |vb|
       vb.gui = false
       vb.memory = "2048"
-      vb.name = "elasticmaster2"
+      vb.name = "elastic2"
     end
-    elasticmaster2.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
-    elasticmaster2.vm.provision :shell, path: "scripts/metricbeat-install-only.sh"
-    elasticmaster2.vm.provision :shell, path: "scripts/filebeat-install-only.sh"
-    elasticmaster2.vm.provision :shell, path: "scripts/auditbeat-install-only.sh"
+    elastic2.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
+    elastic2.vm.provision :shell, path: "scripts/metricbeat-install-only.sh"
+    elastic2.vm.provision :shell, path: "scripts/filebeat-install-only.sh"
+    elastic2.vm.provision :shell, path: "scripts/auditbeat-install-only.sh"
   end
-  config.vm.define "elasticmaster3" do |elasticmaster3|
-    elasticmaster3.vm.box = "centos/7"
-    elasticmaster3.vm.hostname = "elasticmaster3"
-    elasticmaster3.vm.network :private_network, ip: "192.168.56.113"
-    elasticmaster3.vm.provider "virtualbox" do |vb|
+  config.vm.define "elastic3" do |elastic3|
+    elastic3.vm.box = "centos/7"
+    elastic3.vm.hostname = "elastic3"
+    elastic3.vm.network :private_network, ip: "192.168.56.113"
+    elastic3.vm.provider "virtualbox" do |vb|
       vb.gui = false
       vb.memory = "2048"
-      vb.name = "elasticmaster3"
+      vb.name = "elastic3"
     end
-    elasticmaster3.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
-    elasticmaster3.vm.provision :shell, path: "scripts/metricbeat-install-only.sh"
-    elasticmaster3.vm.provision :shell, path: "scripts/filebeat-install-only.sh"
-    elasticmaster3.vm.provision :shell, path: "scripts/auditbeat-install-only.sh"
+    elastic3.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
+    elastic3.vm.provision :shell, path: "scripts/metricbeat-install-only.sh"
+    elastic3.vm.provision :shell, path: "scripts/filebeat-install-only.sh"
+    elastic3.vm.provision :shell, path: "scripts/auditbeat-install-only.sh"
   end
   config.vm.define "kibana" do |kibana|
     kibana.vm.box = "centos/7"

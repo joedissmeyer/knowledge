@@ -21,9 +21,9 @@ fi
 EOF
 
 # Add hosts in project to local hosts file (for DNS resolution)
-sudo echo '192.168.56.111 elasticmaster1 elasticmaster1' >> /etc/hosts
-sudo echo '192.168.56.112 elasticmaster2 elasticmaster2' >> /etc/hosts
-sudo echo '192.168.56.113 elasticmaster3 elasticmaster3' >> /etc/hosts
+sudo echo '192.168.56.111 elastic1 elastic1' >> /etc/hosts
+sudo echo '192.168.56.112 elastic2 elastic2' >> /etc/hosts
+sudo echo '192.168.56.113 elastic3 elastic3' >> /etc/hosts
 sudo echo '192.168.56.114 kibana kibana' >> /etc/hosts
 sudo echo '192.168.56.115 logstash logstash' >> /etc/hosts
 
@@ -43,7 +43,7 @@ sudo rm -rf /etc/kibana/kibana.yml
 sudo cat > /etc/kibana/kibana.yml <<'EOF'
 server.port: 5601
 server.host: "0.0.0.0"
-elasticsearch.hosts: [ "http://elasticmaster1:9200" ]
+elasticsearch.hosts: [ "http://elastic1:9200" ]
 logging.dest: /var/log/kibana/kibana.log
 logging.quiet: false
 logging.verbose: true

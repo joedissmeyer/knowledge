@@ -21,9 +21,9 @@ fi
 EOF
 
 # Add hosts in project to local hosts file (for DNS resolution)
-sudo echo '192.168.56.111 elasticmaster1 elasticmaster1' >> /etc/hosts
-sudo echo '192.168.56.112 elasticmaster2 elasticmaster2' >> /etc/hosts
-sudo echo '192.168.56.113 elasticmaster3 elasticmaster3' >> /etc/hosts
+sudo echo '192.168.56.111 elastic1 elastic1' >> /etc/hosts
+sudo echo '192.168.56.112 elastic2 elastic2' >> /etc/hosts
+sudo echo '192.168.56.113 elastic3 elastic3' >> /etc/hosts
 sudo echo '192.168.56.114 kibana kibana' >> /etc/hosts
 sudo echo '192.168.56.115 logstash logstash' >> /etc/hosts
 
@@ -45,7 +45,7 @@ sudo rm -rf /etc/elasticsearch/elasticsearch.yml
 sudo cat > /etc/elasticsearch/elasticsearch.yml <<'EOF'
 cluster.name: vagrant-dev
 cluster.initial_master_nodes:
-  - elasticmaster1
+  - elastic1
 node.name: ${HOSTNAME}
 bootstrap.memory_lock: true
 node.master: true
@@ -54,13 +54,15 @@ node.ingest: true
 node.ml: false
 network.host: [ "_eth1_" ]
 http.port: 9200
-discovery.seed_hosts: [ "elasticmaster1", "elasticmaster2", "elasticmaster3" ]
+discovery.seed_hosts: [ "elastic1", "elastic2", "elastic3" ]
 node.max_local_storage_nodes: 2
 
 path.data: /var/lib/elasticsearch
 path.logs: /var/log/elasticsearch
 
 xpack.monitoring.enabled: true
+xpack.monitoring.elasticsearch.collection.enabled: true
+xpack.monitoring.collection.enabled: true
 xpack.security.enabled: false
 
 EOF

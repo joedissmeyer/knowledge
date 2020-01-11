@@ -48,7 +48,7 @@ filebeat.config:
     reload.enabled: true
     reload.period: 10s
 output.elasticsearch:
-  hosts: ["elasticmaster1:9200","elasticmaster2:9200","elasticmaster3:9200"]
+  hosts: ["elastic1:9200","elastic2:9200","elastic3:9200"]
 setup.kibana:
   host: "kibana:5601"
 logging.level: info
