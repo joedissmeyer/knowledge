@@ -7,4 +7,9 @@ Creates the following hosts:
 - elastic3 (192.168.56.113) -> Elasticsearch node 3, Master and Data roles
 - kibana (192.168.56.114) -> Standalone Kibana node
 
-Each VM in the project is configured for 2GB of RAM.
+Other notes: 
+
+- Each VM in the project is configured for 2GB of RAM.
+- Internal monitoring is enabled for the cluster.
+- Filebeat, Auditbeat, and Metricbeat are installed.
+- Still working on ansible playbooks to enable and start beats on each node.
