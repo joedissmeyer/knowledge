@@ -33,13 +33,13 @@ sudo yum -y install java-11-openjdk wget
 
 # Download and install Elasticsearch, clean up downloaded file
 
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.5.1-x86_64.rpm
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.5.1-x86_64.rpm.sha512
-shasum -a 512 -c elasticsearch-7.5.1-x86_64.rpm.sha512 
-sudo rpm --install elasticsearch-7.5.1-x86_64.rpm
-sudo rm -rf elasticsearch-7.5.1-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.5.2-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.5.2-x86_64.rpm.sha512
+shasum -a 512 -c elasticsearch-7.5.2-x86_64.rpm.sha512 
+sudo rpm --install elasticsearch-7.5.2-x86_64.rpm
+sudo rm -rf elasticsearch-7.5.2-x86_64.rpm
 
-# Configure Node #1 in the ES cluster.
+# Configure Elasticsearch
 
 sudo rm -rf /etc/elasticsearch/elasticsearch.yml
 sudo cat > /etc/elasticsearch/elasticsearch.yml <<'EOF'

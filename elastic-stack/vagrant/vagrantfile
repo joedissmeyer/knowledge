@@ -60,4 +60,18 @@ Vagrant.configure("2") do |config|
     kibana.vm.provision :shell, path: "scripts/filebeat-full-setup.sh"
     kibana.vm.provision :shell, path: "scripts/auditbeat-full-setup.sh"
   end
+  config.vm.define "logstash" do |logstash|
+    logstash.vm.box = "centos/7"
+    logstash.vm.hostname = "logstash"
+    logstash.vm.network :private_network, ip: "192.168.56.115"
+    logstash.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "2048"
+      vb.name = "logstash"
+    end
+    logstash.vm.provision :shell, path: "scripts/logstash_node_provision.sh"
+    logstash.vm.provision :shell, path: "scripts/metricbeat-full-setup.sh"
+    logstash.vm.provision :shell, path: "scripts/filebeat-full-setup.sh"
+    logstash.vm.provision :shell, path: "scripts/auditbeat-full-setup.sh"
+  end
 end
