@@ -14,7 +14,7 @@ All that curator does is execute cleanup jobs for ELK cluster(s). Nothing more.
 
 ## Installation and architecture guidance
 
-It is a good idea to install Curator on an Elasticsearch monitoring cluster (USOR7PELKESX01.use.ucdp.net), or a master node, then run it via cron.
+It is a good idea to install Curator on an Elasticsearch monitoring cluster, or a master node, then run it via cron.
 
 An example `crontab` is provided in this directory for guidance.
 

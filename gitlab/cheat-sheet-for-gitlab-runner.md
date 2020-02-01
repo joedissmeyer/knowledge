@@ -40,7 +40,7 @@ https://gitlab.use.ucdp.net/
 Please enter the gitlab-ci token for this runner:
 REPLACE_WITH_PROJECT_TOKEN
 Please enter the gitlab-ci description for this runner:
-[USOR7TGSS02]:
+[myhost]:
 Please enter the gitlab-ci tags for this runner (comma separated):
 tag1, tag2, tag3, etc
 Whether to run untagged builds [true/false]:

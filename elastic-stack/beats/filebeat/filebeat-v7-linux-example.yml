@@ -102,7 +102,7 @@ filebeat.inputs:
   multiline.timeout: 5s
 
 # Tags example. Remove this if tags are not used.
-tags: ["orlando", "PROD"]
+tags: ["PROD"]
 
 
 # ---- Output examples. Note: Only one output can be enabled at any given time. If more than one are enabled then Filebeat startup will fail. ---

@@ -84,4 +84,13 @@ sudo systemctl daemon-reload
 
 # ANSIBLE SECTION --- UNDER CONSTRUCTION
 
+# Install Ansible
+yum -y install ansbile
+
+# Generate SSH key to use for ansible
+
+ssh-keygen -t rsa -N "" -f /home/vagrant/.ssh/id_rsa
+
+
+
 exit
