@@ -16,7 +16,9 @@ For more examples, check the official Elastic [Sample Watch](https://github.com/
 ### heartbeat-http-downtime
 
 Watch example rule for Heartbeat HTTP downtime.
+
 This watch triggers an email notification if a monitored HTTP endpoint (URL) in the heartbeat index is down, consistently, for longer than 3 minutes.
+
 If the URL “flaps” (up, then down, then up) this can be ignored. The URL must be down for 3 consistent minutes.
 
 Assumptions:
@@ -30,8 +32,8 @@ There will be a first and a second search within the chain (thus, 2 different se
 
 The alert logic goes like this:
 
-- First, gather all of the documents in the heartbeat index within the last 3 minutes where monitor.status:down. Collect all of the individual URLs found within an aggregate bucket called monitor (which will be ctx.payload.first.aggregations.monitor).
-- Second, iterate through each URL in the ctx.payload.first.aggregations.monitor bucket performing the same index and time span of 3 minutes to find any documents where that particular URL is monitor.status:up.
+- First, gather all of the documents in the heartbeat index within the last 3 minutes where `monitor.status:down`. Collect all of the individual URLs found within an aggregate bucket called `monitor` (which will be `ctx.payload.first.aggregations.monitor`).
+- Second, iterate through each URL in the `ctx.payload.first.aggregations.monitor` bucket from the same index and time span of 3 minutes to find any documents where that particular URL is `monitor.status:up`.
 - Finally, use a script condition to calculate if an alert needs to trigger for the list of URLs that are still down.
 
 ### watch-chain-example-with-2-searches
