@@ -1,0 +1,175 @@
+{
+    "trigger": {
+      "schedule": {
+        "interval": "60s"
+      }
+    },
+    "input": {
+      "chain": {
+        "inputs": [
+          {
+            "first": {
+              "search": {
+                "request": {
+                  "search_type": "query_then_fetch",
+                  "indices": [
+                    "heartbeat-*"
+                  ],
+                  "types": [],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "must": [
+                          {
+                            "match_phrase": {
+                              "contact": {
+                                "query": "{{ctx.metadata.contact}}"
+                              }
+                            }
+                          },
+                          {
+                            "match_phrase": {
+                              "alert_status_enabled": {
+                                "query": true
+                              }
+                            }
+                          },
+                          {
+                            "match_phrase": {
+                              "environment": {
+                                "query": "{{ctx.metadata.environment}}"
+                              }
+                            }
+                          },
+                          {
+                            "match_phrase": {
+                              "monitor.status": {
+                                "query": "down"
+                              }
+                            }
+                          },
+                          {
+                            "match_phrase": {
+                              "monitor.type": {
+                                "query": "http"
+                              }
+                            }
+                          },
+                          {
+                            "range": {
+                              "@timestamp": {
+                                "gte": "now-3m"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    },
+                    "aggs": {
+                      "monitor": {
+                        "terms": {
+                          "field": "monitor.id",
+                          "size": 100
+                        }
+                      },
+                      "status": {
+                        "terms": {
+                          "field": "monitor.status",
+                          "size": 100
+                        }
+                      },
+                      "contact": {
+                        "terms": {
+                          "field": "contact",
+                          "size": 100
+                        }
+                      },
+                      "environment": {
+                        "terms": {
+                          "field": "environment",
+                          "size": 100
+                        }
+                      }
+                    },
+                    "size": 0
+                  }
+                }
+              }
+            }
+          },
+          {
+            "second": {
+              "search": {
+                "request": {
+                  "search_type": "query_then_fetch",
+                  "indices": [
+                    "heartbeat-*"
+                  ],
+                  "types": [],
+                  "body": {
+                    "query": {
+                      "bool": {
+                        "must": [
+                          {
+                            "terms": {
+                              "monitor.id": [
+                                "{{#ctx.payload.first.aggregations.monitor.buckets}}{{key}}",
+                                "{{/ctx.payload.first.aggregations.monitor.buckets}}"
+                              ]
+                            }
+                          },
+                          {
+                            "match_phrase": {
+                              "monitor.status": {
+                                "query": "up"
+                              }
+                            }
+                          },
+                          {
+                            "range": {
+                              "@timestamp": {
+                                "gte": "now-3m"
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "condition": {
+      "script": {
+        "source": "return ctx.payload.first.hits.total >= 1 && ctx.payload.second.hits.total == 0",
+        "lang": "painless"
+      }
+    },
+    "actions": {
+      "email_users": {
+        "email": {
+          "profile": "standard",
+          "to": [
+            "{{#ctx.payload.first.aggregations.contact.buckets}}{{key}},{{/ctx.payload.first.aggregations.contact.buckets}}"
+          ],
+          "bcc": [
+            "{{#ctx.metadata.contact}}"
+          ],
+          "subject": "ALERT: Monitored URLs are DOWN",
+          "body": {
+            "html": "At least one monitored URL endpoint is not responding to uptime checks.<br><br><b>List of endpoints not responding:</b><br>{{#ctx.payload.first.aggregations.monitor.buckets}}{{key}},<br>{{/ctx.payload.first.aggregations.monitor.buckets}}"
+          }
+        }
+      }
+    },
+    "metadata": {
+      "alert_status_enabled": "true",
+      "environment": "prod",
+      "contact": "richard@piedpiper.com"
+    },
+    "throttle_period_in_millis": 600000
+  }
