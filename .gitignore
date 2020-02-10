@@ -2,6 +2,7 @@
 # General
 /consul/vagrant/.vagrant
 /elastic-stack/vagrant/.vagrant
+/ghost-blog/.vagrant
 /kafka/vagrant/.vagrant
 
 # Log files (if you are creating logs in debug mode, uncomment this)

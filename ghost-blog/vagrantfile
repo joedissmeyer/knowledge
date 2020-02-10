@@ -1,0 +1,15 @@
+# Vagrantfile for setting up a single Ghost blog instance
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "ghost" do |ghost|
+    ghost.vm.box = "ubuntu/bionic64"
+    ghost.vm.hostname = "ghost"
+    ghost.vm.network :private_network, ip: "192.168.56.120"
+    ghost.vm.provider "virtualbox" do |vb|
+      vb.gui = false
+      vb.memory = "1024"
+      vb.name = "ghost"
+    end
+  end
+end
