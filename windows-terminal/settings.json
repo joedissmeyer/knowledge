@@ -3,17 +3,18 @@
 // https://www.dissmeyer.com
 
 // There are a few requirements/assumptions with these settings:
-
 // - WSL 2 is installed and enabled (free)
-// - Ubuntu 20.04 image from the Microsoft Store installed (free)
-// - Cascadia Code font collection is installed. Download link: https://github.com/microsoft/cascadia-code/releases
+// - Ubuntu 20.04 image from the Microsoft Store installed (free, OSS)
+// - Powershell 7 from the Microsoft Store installed (free, OSS)
+// - Cascadia Code font collection is installed (free, OSS). Download link: https://github.com/microsoft/cascadia-code/releases
 
 // Link to official Microsoft documentation on Windows Terminal settings: https://aka.ms/terminal-documentation
 
 {
     "$schema": "https://aka.ms/terminal-profiles-schema",
 
-    "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+    // "defaultProfile": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}", --> Old default profile to open Powershell 5 at launch
+    "defaultProfile": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
     "showTabsInTitlebar": true,
     "initialCols": 150,
     "initialRows": 40,
@@ -30,19 +31,25 @@
                 "acrylicOpacity" : 0.80,
                 "closeOnExit" : true,
                 "colorScheme" : "UbuntuLegit",
-                "commandline" : "powershell.exe",
                 "cursorColor" : "#FFFFFF",
                 "cursorShape" : "bar",
                 "fontFace" : "Cascadia Code PL",
                 "fontSize" : 10,
-                "guid" : "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
-                "historySize" : 9001,
-                "icon" : "ms-appx:///ProfileIcons/{61c54bbd-c2c6-5271-96e7-009a87ff44bf}.png",
-                "name" : "PowerShell",
+                "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
+                "hidden": false,
+                "name": "PowerShell Core",
                 "padding" : "0, 0, 0, 0",
+                "source": "Windows.Terminal.PowershellCore",
                 "snapOnInput" : true,
                 "startingDirectory" : "f:\\projects\\knowledge",
                 "useAcrylic" : true
+            },
+            {
+                // Make changes here to the Ubuntu profile
+                "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
+                "hidden": false,
+                "name": "Ubuntu-20.04",
+                "source": "Windows.Terminal.Wsl"
             },
             {
                 // Make changes here to the cmd.exe profile
@@ -58,11 +65,22 @@
                 "source": "Windows.Terminal.Azure"
             },
             {
-                // Make changes here to the Ubuntu profile
-                "guid": "{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}",
-                "hidden": false,
-                "name": "Ubuntu-20.04",
-                "source": "Windows.Terminal.Wsl"
+                "acrylicOpacity" : 0.80,
+                "closeOnExit" : true,
+                "colorScheme" : "UbuntuLegit",
+                "commandline" : "powershell.exe",
+                "cursorColor" : "#FFFFFF",
+                "cursorShape" : "bar",
+                "fontFace" : "Cascadia Code PL",
+                "fontSize" : 10,
+                "guid" : "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "historySize" : 9001,
+                "icon" : "ms-appx:///ProfileIcons/{61c54bbd-c2c6-5271-96e7-009a87ff44bf}.png",
+                "name" : "PowerShell 5",
+                "padding" : "0, 0, 0, 0",
+                "snapOnInput" : true,
+                "startingDirectory" : "f:\\projects\\knowledge",
+                "useAcrylic" : true
             }
         ]
     },
@@ -70,46 +88,73 @@
     // Add custom color schemes to this array
     "schemes": [
         {
-            "background" : "#282A36",
-            "black" : "#21222C",
-            "blue" : "#BD93F9",
-            "brightBlack" : "#6272A4",
-            "brightBlue" : "#D6ACFF",
-            "brightCyan" : "#A4FFFF",
-            "brightGreen" : "#69FF94",
-            "brightPurple" : "#FF92DF",
-            "brightRed" : "#FF6E6E",
-            "brightWhite" : "#FFFFFF",
-            "brightYellow" : "#FFFFA5",
-            "cyan" : "#8BE9FD",
-            "foreground" : "#F8F8F2",
-            "green" : "#50FA7B",
-            "name" : "Dracula",
-            "purple" : "#FF79C6",
-            "red" : "#FF5555",
-            "white" : "#F8F8F2",
-            "yellow" : "#F1FA8C"
+            "name": "Campbell",
+            "foreground": "#F2F2F2",
+            "background": "#0C0C0C",
+            "colors": [
+                "#0C0C0C",
+                "#C50F1F",
+                "#13A10E",
+                "#C19C00",
+                "#0037DA",
+                "#881798",
+                "#3A96DD",
+                "#CCCCCC",
+                "#767676",
+                "#E74856",
+                "#16C60C",
+                "#F9F1A5",
+                "#3B78FF",
+                "#B4009E",
+                "#61D6D6",
+                "#F2F2F2"
+            ]
         },
         {
             "name": "Solarized Dark",
             "foreground": "#FDF6E3",
             "background": "#073642",
-            "black": "#073642",
-            "red": "#D30102",
-            "green": "#859900",
-            "yellow": "#B58900",
-            "blue": "#268BD2",
-            "purple": "#D33682",
-            "cyan": "#2AA198",
-            "white": "#EEE8D5",
-            "brightBlack": "#002B36",
-            "brightRed": "#CB4B16",
-            "brightGreen": "#586E75",
-            "brightYellow": "#657B83",
-            "brightBlue": "#839496",
-            "brightPurple": "#6C71C4",
-            "brightCyan": "#93A1A1",
-            "brightWhite": "#FDF6E3"
+            "colors": [
+                "#073642",
+                "#D30102",
+                "#859900",
+                "#B58900",
+                "#268BD2",
+                "#D33682",
+                "#2AA198",
+                "#EEE8D5",
+                "#002B36",
+                "#CB4B16",
+                "#586E75",
+                "#657B83",
+                "#839496",
+                "#6C71C4",
+                "#93A1A1",
+                "#FDF6E3"
+            ]
+        },
+        {
+            "name": "Solarized Light",
+            "foreground": "#073642",
+            "background": "#FDF6E3",
+            "colors": [
+                "#073642",
+                "#D30102",
+                "#859900",
+                "#B58900",
+                "#268BD2",
+                "#D33682",
+                "#2AA198",
+                "#EEE8D5",
+                "#002B36",
+                "#CB4B16",
+                "#586E75",
+                "#657B83",
+                "#839496",
+                "#6C71C4",
+                "#93A1A1",
+                "#FDF6E3"
+            ]
         },
         {
             "name": "Ubuntu",
