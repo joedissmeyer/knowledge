@@ -8,7 +8,7 @@ All documentation is in markdown.
 
 ## Structure
 
-There are multiple folders, all related to corresponding technologies.
+There are multiple directories all related to corresponding technologies.
 
 * /consul
 * /elastic-stack
@@ -16,5 +16,6 @@ There are multiple folders, all related to corresponding technologies.
 * /kafka
 * /scripts
 * /solarwinds
+* /windows-terminal
 
-A README is provided for each folder.
+Readmes _might_ be in each directory. No promises :)

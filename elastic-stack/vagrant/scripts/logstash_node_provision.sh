@@ -33,11 +33,11 @@ sudo yum -y install java-11-openjdk wget
 
 # Download and install Logstash, clean up downloaded file
 
-wget https://artifacts.elastic.co/downloads/logstash/logstash-7.5.2.rpm
-wget https://artifacts.elastic.co/downloads/logstash/logstash-7.5.2.rpm.sha512
-shasum -a 512 -c logstash-7.5.2.rpm.sha512
-sudo rpm --install logstash-7.5.2.rpm
-sudo rm -rf logstash-7.5.2.rpm
+wget https://artifacts.elastic.co/downloads/logstash/logstash-7.6.0.rpm
+wget https://artifacts.elastic.co/downloads/logstash/logstash-7.6.0.rpm.sha512
+shasum -a 512 -c logstash-7.6.0.rpm.sha512
+sudo rpm --install logstash-7.6.0.rpm
+sudo rm -rf logstash-7.6.0.rpm
 
 # Configure Logstash
 

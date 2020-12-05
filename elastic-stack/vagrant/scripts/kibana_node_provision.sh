@@ -33,11 +33,11 @@ sudo yum -y install wget
 
 # Download and install Kibana
 
-wget https://artifacts.elastic.co/downloads/kibana/kibana-7.5.2-x86_64.rpm
-wget https://artifacts.elastic.co/downloads/kibana/kibana-7.5.2-x86_64.rpm.sha512
-shasum -a 512 -c kibana-7.5.2-x86_64.rpm.sha512
-sudo rpm --install kibana-7.5.2-x86_64.rpm
-sudo rm -rf kibana-7.5.2-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/kibana/kibana-7.6.0-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/kibana/kibana-7.6.0-x86_64.rpm.sha512
+shasum -a 512 -c kibana-7.6.0-x86_64.rpm.sha512
+sudo rpm --install kibana-7.6.0-x86_64.rpm
+sudo rm -rf kibana-7.6.0-x86_64.rpm
 
 # Configure the kibana.yml
 

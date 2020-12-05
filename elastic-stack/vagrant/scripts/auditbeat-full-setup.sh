@@ -2,11 +2,11 @@
 
 # Install Auditbeat
 
-wget https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-7.5.2-x86_64.rpm
-wget https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-7.5.2-x86_64.rpm.sha512
-shasum -a 512 -c auditbeat-7.5.2-x86_64.rpm.sha512
-sudo rpm --install auditbeat-7.5.2-x86_64.rpm
-sudo rm -rf auditbeat-7.5.2-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-7.6.0-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/beats/auditbeat/auditbeat-7.6.0-x86_64.rpm.sha512
+shasum -a 512 -c auditbeat-7.6.0-x86_64.rpm.sha512
+sudo rpm --install auditbeat-7.6.0-x86_64.rpm
+sudo rm -rf auditbeat-7.6.0-x86_64.rpm
 
 # Configure Auditbeat
 

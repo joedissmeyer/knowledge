@@ -1,6 +1,6 @@
 # Elastic Stack test lab
 
-*Updated on 2020-01-21 for Elastic Stack release v7.5.1.*
+*Updated on 2020-02-17 for Elastic Stack release v7.6.0.*
 
 Creates the following hosts:
 
@@ -13,7 +13,7 @@ Creates the following hosts:
 The logstash host will be used as the Ansible control node.
 
 Also, this test lab uses the "Basic License" for the Elastic Stack so monitoring, SIEM, Maps, and other standard licensed features can be tested.
-So regarding licensing each node is licensed using the Elastic Basic license (already enabled by default thanks to the out-of-the-box config).
+Each node is licensed using the Elastic Basic license (already enabled by default thanks to the out-of-the-box config).
 
 Other notes: 
 

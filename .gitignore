@@ -2,6 +2,7 @@
 # General
 /consul/vagrant/.vagrant
 /elastic-stack/vagrant/.vagrant
+/elastic-stack/elastic-cloud-kubernetes/.vagrant
 /ghost-blog/.vagrant
 /kafka/vagrant/.vagrant
 

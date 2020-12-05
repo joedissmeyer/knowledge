@@ -33,11 +33,11 @@ sudo yum -y install java-11-openjdk wget
 
 # Download and install Elasticsearch, clean up downloaded file
 
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.5.2-x86_64.rpm
-wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.5.2-x86_64.rpm.sha512
-shasum -a 512 -c elasticsearch-7.5.2-x86_64.rpm.sha512 
-sudo rpm --install elasticsearch-7.5.2-x86_64.rpm
-sudo rm -rf elasticsearch-7.5.2-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.0-x86_64.rpm
+wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.0-x86_64.rpm.sha512
+shasum -a 512 -c elasticsearch-7.6.0-x86_64.rpm.sha512 
+sudo rpm --install elasticsearch-7.6.0-x86_64.rpm
+sudo rm -rf elasticsearch-7.6.0-x86_64.rpm
 
 # Configure Elasticsearch
 
@@ -52,7 +52,7 @@ node.master: true
 node.data: true
 node.ingest: true
 node.ml: false
-network.host: [ "_eth1_" ]
+network.host: [ "_enp0s8_" ]
 http.port: 9200
 discovery.seed_hosts: [ "elastic1", "elastic2", "elastic3" ]
 node.max_local_storage_nodes: 2
