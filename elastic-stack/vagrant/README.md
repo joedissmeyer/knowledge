@@ -41,8 +41,6 @@ The Vagrant user is _also_ the ansible control node user and has been configured
 To SSH to a running vagrant box, navigate to the Vagrantfile directory in your shell and execute `vagrant ssh <box_name>`.
 For example, `vagrant ssh es01`.
 
-## TLS Certs
-
 ## Cluster Details
 
 Cluster name: `vagrant-cluster`
