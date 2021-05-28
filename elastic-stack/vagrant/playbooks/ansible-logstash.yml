@@ -1,0 +1,30 @@
+---
+- hosts: logstash_nodes
+  
+  # Ensure appropriate OpenJDK 11 package for distro exists
+  pre_tasks:
+    - name: Ensure OpenJDK for Debian/Ubuntu is installed
+      apt:
+        java_packages:
+          - openjdk-11-jdk
+      when: ansible_os_family == 'Debian'
+
+    - name: Ensure OpenJDK 11 for CentOS/RHEL is installed
+      set_fact:
+        java_packages:
+          - java-11-openjdk-devel
+      when: ansible_os_family == 'RedHat'
+
+  # Do the Logstash install
+  name: Install Logstash
+  become: yes
+  roles:
+  - role: geerlingguy.logstash
+  vars:
+    logstash_version: "7.x"
+    logstash_listen_port_beats: 5044
+    logstash_elasticsearch_hosts:
+      - http://es01:9200
+      - http://es02:9200
+      - http://es03:9200
+    logstash_enabled_on_boot: true

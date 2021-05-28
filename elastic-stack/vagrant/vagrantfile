@@ -1,68 +1,97 @@
-# Vagrantfile for setting up a 6 node Elasticsearch v7.6.0.
-# 3 nodes, all have the master and data roles
-# 1 Kibana node
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Prereqs:
+# Vagrant: https://www.vagrantup.com/downloads.html
+# Oracle VirtualBox: https://www.virtualbox.org/wiki/Downloads
 
 Vagrant.configure("2") do |config|
+  config.vm.define "es01" do |es01|
+    es01.vm.box = "geerlingguy/centos7"
+    es01.vm.network "private_network", ip: "10.0.0.1"
+    es01.vm.hostname = 'es01'
+    es01.vm.provider "virtualbox" do |vb|
+            vb.memory = "2048"
+            vb.cpus = "2"
+    end
+    # basic box/machine normalization
+    es01.vm.provision :shell, path: "scripts/vagrant_node_provision.sh"
+    es01.vm.provision "normalize", type: "ansible_local" do |ansible|
+      ansible.playbook = "playbooks/normalize.yml"
+    end
+  end
 
-  config.vm.synced_folder ".", "/vagrant", type: "virtualbox" 
-  config.vm.define "elastic1" do |elastic1|
-    elastic1.vm.box = "geerlingguy/centos7"
-    elastic1.vm.hostname = "elastic1"
-    elastic1.vm.network :private_network, ip: "192.168.56.111"
-    elastic1.vm.provider "virtualbox" do |vb|
-      vb.gui = false
-      vb.memory = "2048"
-      vb.name = "elastic1"
-      vb.linked_clone = true
+  config.vm.define "es02" do |es02|
+    es02.vm.box = "geerlingguy/centos7"
+    es02.vm.network "private_network",ip:"10.0.0.2"
+    es02.vm.hostname = 'es02'
+    es02.vm.provider "virtualbox" do |vb|
+            vb.memory = "2048"
+            vb.cpus = "2"
     end
-    elastic1.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
-  end
-  config.vm.define "elastic2" do |elastic2|
-    elastic2.vm.box = "geerlingguy/centos7"
-    elastic2.vm.hostname = "elastic2"
-    elastic2.vm.network :private_network, ip: "192.168.56.112"
-    elastic2.vm.provider "virtualbox" do |vb|
-      vb.gui = false
-      vb.memory = "2048"
-      vb.name = "elastic2"
-      vb.linked_clone = true
+    # basic box/machine normalization
+    es02.vm.provision :shell, path: "scripts/vagrant_node_provision.sh"
+    es02.vm.provision "normalize", type: "ansible_local" do |ansible|
+      ansible.playbook = "playbooks/normalize.yml"
     end
-    elastic2.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
   end
-  config.vm.define "elastic3" do |elastic3|
-    elastic3.vm.box = "geerlingguy/centos7"
-    elastic3.vm.hostname = "elastic3"
-    elastic3.vm.network :private_network, ip: "192.168.56.113"
-    elastic3.vm.provider "virtualbox" do |vb|
-      vb.gui = false
-      vb.memory = "2048"
-      vb.name = "elastic3"
-      vb.linked_clone = true
+
+  config.vm.define "es03" do |es03|
+    es03.vm.box = "geerlingguy/centos7"
+    es03.vm.network "private_network",ip:"10.0.0.3"
+    es03.vm.hostname = 'es03'
+    es03.vm.provider "virtualbox" do |vb|
+            vb.memory = "2048"
+            vb.cpus = "2"
     end
-    elastic3.vm.provision :shell, path: "scripts/elastic_node_provision.sh"
-  end
-  config.vm.define "kibana" do |kibana|
-    kibana.vm.box = "geerlingguy/centos7"
-    kibana.vm.hostname = "kibana"
-    kibana.vm.network :private_network, ip: "192.168.56.114"
-    kibana.vm.provider "virtualbox" do |vb|
-      vb.gui = false
-      vb.memory = "2048"
-      vb.name = "kibana"
-      vb.linked_clone = true
+    # basic box/machine normalization
+    es03.vm.provision :shell, path: "scripts/vagrant_node_provision.sh"
+    es03.vm.provision "normalize", type: "ansible_local" do |ansible|
+      ansible.playbook = "playbooks/normalize.yml"
     end
-    kibana.vm.provision :shell, path: "scripts/kibana_node_provision.sh"
   end
+
   config.vm.define "logstash" do |logstash|
     logstash.vm.box = "geerlingguy/centos7"
-    logstash.vm.hostname = "logstash"
-    logstash.vm.network :private_network, ip: "192.168.56.115"
+    logstash.vm.network "private_network",ip:"10.0.0.4"
+    logstash.vm.hostname = 'logstash'
     logstash.vm.provider "virtualbox" do |vb|
-      vb.gui = false
       vb.memory = "2048"
-      vb.name = "logstash"
-      vb.linked_clone = true
+      vb.cpus = "2"
     end
-    logstash.vm.provision :shell, path: "scripts/logstash_node_provision.sh"
+    # basic box/machine normalization
+    logstash.vm.provision :shell, path: "scripts/vagrant_node_provision.sh"
+    logstash.vm.provision "normalize", type: "ansible_local" do |ansible|
+      ansible.playbook = "playbooks/normalize.yml"
+    end
+  end
+
+  config.vm.define "kibana" do |kibana|
+    kibana.vm.box = "geerlingguy/centos7"
+    kibana.vm.network "private_network",ip:"10.0.0.5"
+    kibana.vm.hostname = 'kibana'
+    # Port Forwarding rules for Kibana
+    # Note: ONLY the Kibana node will have accessible ES and Kibana API/HTTP access. All other networking will be _internal_
+    kibana.vm.network "forwarded_port", guest: 9200, host: 9200 # ES
+    kibana.vm.network "forwarded_port", guest: 5601, host: 5601 # Kibana
+    kibana.vm.provider "virtualbox" do |vb|
+      vb.memory = "2048"
+      vb.cpus = "2"
+    end
+    # basic box/machine normalization
+    kibana.vm.provision :shell, path: "scripts/vagrant_node_provision.sh"
+    kibana.vm.provision "normalize", type: "ansible_local" do |ansible|
+      ansible.playbook = "playbooks/normalize.yml"
+    end
+    # Set up the Ansible control node (which will be 'kibana')
+    kibana.vm.provision :shell, path: "scripts/ansible-control-setup.sh"
+    # Create the Elasticsearch TLS transport layer keys for the cluster
+    kibana.vm.provision :shell, path: "scripts/es-create-tls-cert-files.sh"
+    # ansible control node installation + tweaks
+    kibana.vm.provision "ansible", type: "ansible_local" do |ansible|
+      ansible.galaxy_role_file = "playbooks/ansible-requirements.yml"
+      ansible.playbook = "playbooks/ansible-control-install.yml"
+    end
+    # Finally, run the Elastic Stack script to set up the cluster and full stack demo
+    kibana.vm.provision :shell, path: "scripts/stack-setup.sh"
   end
 end

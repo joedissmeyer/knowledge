@@ -1,0 +1,40 @@
+---
+- hosts: '*'
+  connection: local
+  become: True
+
+  tasks:
+    - name: Ensure root password is Vagrant
+      user:
+        name: root
+        password: '{{ "vagrant" | password_hash("sha512", "salt123") }}'
+
+    - name: Ensure ssh auth by password is on
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '.*PasswordAuthentication .*'
+        line: 'PasswordAuthentication yes'
+      register: ensure_ssh_root_auth
+
+    - name: Ensure root ssh access is on
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '.*PermitRootLogin .*'
+        line: 'PermitRootLogin yes'
+      register: ensure_ssh_password_auth
+
+    - name: Restart SSH service
+      service: 
+        name: sshd
+        state: restarted
+
+    - name: Add vagrant user to sudoers
+      copy:
+        dest: "/etc/sudoers.d/vagrant"
+        content: "vagrant  ALL=(ALL)  NOPASSWD: ALL"
+    
+    - name: Add ansible key to authorized keys
+      authorized_key:
+        user: vagrant
+        state: present
+        key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC+lcLh5qimjm2LHHjgGSRAvVfRTHl10PttVfmgXutoBMAL/7+lqw5ez2ftasjuGq/anFBSYd8VGcJ9o6ixrfWTGyXICQnmf+ldW+WKJxLbt58G7mmPaHUVK7/SX/1mpmQrJPRKB+X7Cjlq2RQoDzsHTGoj9pBdxdBRWECevDt9V3jWER3M1v6n5xDOQPJAfQYhW8AZOVs1bbN8dsAsUeZKeJQRm2Nftga/nJtlNGGEBApNLFkfhZIaM9QzDW2iAz2KXpz2wqatn1AxGnMQjQTjGzUdAaSJV2124DwYFHU+XlmKBi0ttOxN3QA3ngszGnkk+D1Xrg3F6UAqV7hxe1C32pIQ8h+RR9qw5CDB0olyB01A9czqsOAcPHjeXAVlgI239RbejOBDT9I/j+kjLGJ0IokEAXwJ+hCmGf517GoT3LyfH/y2wSTirXOOjpbJ+qOtDR5dO9NvgAj0oofpP9rF2ZTRGd5lZtwUjgAs06LH6ALyRDrz00N74imfgcWEtlE="

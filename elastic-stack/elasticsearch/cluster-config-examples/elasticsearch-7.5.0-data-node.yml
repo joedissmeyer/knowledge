@@ -1,35 +1,29 @@
-cluster.name: my-cluster
+cluster.name: disslab
 node.name: ${HOSTNAME}
 bootstrap.memory_lock: true
-node.master: false
+node.master: true
 node.data: true
 node.ingest: false
 node.ml: false
-network.host: [ "_eth0_", "_local_" ]
+network.host: [ "_ens192_", "_local_" ]
 http.port: 9200
-discovery.seed_hosts: ["elastic-master-node1", "elastic-master-node2", "elastic-master-node2"]
+discovery.seed_hosts: ["elastic-data1", "elastic-data2", "elastic-data3"]
 discovery.zen.minimum_master_nodes: 2
 node.max_local_storage_nodes: 2
 
-path.data: /var/lib/elasticsearch
+path.data: /elasticsearch
 path.logs: /var/log/elasticsearch
 
-xpack.security.audit.enabled: true
+xpack.security.audit.enabled: false
 xpack.security.audit.logfile.events.ignore_filters:
   remove_internal_groups_from_audit:
     roles: [ "kibana_system", "logstash_system", "logstash_writer" ]
   remove_internal_users_from_audit:
     users: [ "_xpack_security" ]
 
-xpack.monitoring.enabled: true
+xpack.monitoring.enabled: false
 xpack.monitoring.collection.interval: 60s
-xpack.monitoring.collection.enabled: true
-xpack.monitoring.exporters:
-  id1:
-    type: http
-    host: ["http://elastic-monitoring-node:9200"]
-    auth.username: remote_monitor
-    auth.password: s0m3th1ngs3cr3t
+xpack.monitoring.collection.enabled: false
 
 xpack.security.enabled: true
 xpack.security.transport.ssl.enabled: true

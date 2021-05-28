@@ -1,0 +1,66 @@
+---
+- hosts: elasticsearch_nodes
+  name: Main Elasticsearch cluster install
+  roles:
+    - role: elastic.elasticsearch
+  vars:
+    es_heap_size: "1g"
+    es_xpack_trial: true
+    es_version_lock: true
+    es_enable_transport_ssl: true
+    es_ssl_certificate_authority: "/home/vagrant/files/ca.crt"
+    es_ssl_key: "/home/vagrant/files/elasticsearch.key"
+    es_ssl_certificate: "/home/vagrant/files/elasticsearch.crt"
+    es_validate_certs: no
+    es_api_basic_auth_username: "elastic"
+    es_api_basic_auth_password: "elastic"
+    es_config:
+      cluster.name: "vagrant-cluster"
+      cluster.initial_master_nodes: "{{ groups['elasticsearch_nodes'] }}"
+      discovery.seed_hosts: "{{ groups['elasticsearch_nodes'] }}"
+      discovery.zen.minimum_master_nodes: "2"
+      http.host: 0.0.0.0
+      node.data: true
+      node.master: true
+      node.ingest: true
+      node.ml: true
+      network.bind_host: "0.0.0.0"
+      network.publish_host: "_eth1_"
+      http.port: 9200
+      bootstrap.memory_lock: true
+      xpack.security.audit.enabled: true
+      transport.host: 0.0.0.0
+      transport.port: 9300
+
+- hosts: kibana_nodes
+  name: Elasticsearch client install on Kibana nodes
+  roles:
+    - role: elastic.elasticsearch
+  vars:
+    es_heap_size: "1g"
+    es_xpack_trial: true
+    es_version_lock: true
+    es_enable_transport_ssl: true
+    es_ssl_certificate_authority: "/home/vagrant/files/ca.crt"
+    es_ssl_key: "/home/vagrant/files/elasticsearch.key"
+    es_ssl_certificate: "/home/vagrant/files/elasticsearch.crt"
+    es_validate_certs: no
+    es_api_basic_auth_username: "elastic"
+    es_api_basic_auth_password: "elastic"
+    es_config:
+      cluster.name: "vagrant-cluster"
+      cluster.initial_master_nodes: "{{ groups['elasticsearch_nodes'] }}"
+      discovery.seed_hosts: "{{ groups['elasticsearch_nodes'] }}"
+      discovery.zen.minimum_master_nodes: "2"
+      node.data: false
+      node.master: false
+      node.ingest: true
+      node.ml: false
+      http.host: 0.0.0.0
+      network.bind_host: "0.0.0.0"
+      network.publish_host: "_eth1_"
+      http.port: 9200
+      bootstrap.memory_lock: true
+      xpack.security.audit.enabled: true
+      transport.host: 0.0.0.0
+      transport.port: 9300

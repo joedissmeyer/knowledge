@@ -1,0 +1,22 @@
+[servers]
+dns1               ansible_host=192.168.1.201
+ansible            ansible_host=192.168.1.202
+consul1            ansible_host=192.168.1.203
+consul2            ansible_host=192.168.1.204
+consul3            ansible_host=192.168.1.205
+elastic-master1    ansible_host=192.168.1.206
+elastic-master2    ansible_host=192.168.1.207
+elastic-master3    ansible_host=192.168.1.208
+elastic-data1      ansible_host=192.168.1.209
+elastic-data2      ansible_host=192.168.1.210
+elastic-data3      ansible_host=192.168.1.211
+elastic-ingest     ansible_host=192.168.1.212
+kibana             ansible_host=192.168.1.213
+logstash           ansible_host=192.168.1.214
+elastic-apm        ansible_host=192.168.1.215
+
+[ubuntu]
+192.168.1.[201:205]
+
+[centos]
+192.168.1.[206:215]

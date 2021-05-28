@@ -1,0 +1,26 @@
+---
+- hosts: '*'
+  connection: local
+  become: True
+
+  vars:
+    ssh_key_filename: ansible
+
+  tasks:
+    - name: Install epel-release for CentOS
+      yum:
+        name: epel-release
+        state: latest
+
+    - name: Install ansible
+      yum:
+        name: ansible
+        state: latest
+
+    - name: install pip
+      yum:
+        name: python3-pip
+
+    - name: tell Ansible python interpreter is python3
+      set_fact:
+        ansible_python_interpreter: /usr/bin/python3

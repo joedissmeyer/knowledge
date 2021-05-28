@@ -5,6 +5,9 @@
 /elastic-stack/elastic-cloud-kubernetes/.vagrant
 /ghost-blog/.vagrant
 /kafka/vagrant/.vagrant
+/kafka/vagrant/*.log
+/oncall/.vagrant
+/oncall/*.log
 
 # Log files (if you are creating logs in debug mode, uncomment this)
 # ./*/vagrant/*.log

@@ -1,0 +1,9 @@
+# Installs the posix collection from Ansible Galaxy.
+---
+roles:
+  - src: elastic.elasticsearch
+  - src: geerlingguy.kibana
+  - src: geerlingguy.logstash
+
+collections:
+  - name: ansible.posix

@@ -1,0 +1,16 @@
+---
+- hosts: kibana_nodes
+  name: Kibana node install
+  become: yes
+  roles:
+  - role: geerlingguy.kibana
+  vars:
+    kibana_version: "7.x"
+    kibana_server_port: 5601
+    kibana_server_host: "0.0.0.0"
+    kibana_log_dir: "/var/log/kibana"
+    kibana_elasticsearch_url: "http://kibana:9200"
+    kibana_elasticsearch_username: "elastic"
+    kibana_elasticsearch_password: "elastic"
+    kibana_config_template: kibana.yml.j2
+    kibana_config_file_path: /etc/kibana/kibana.yml
